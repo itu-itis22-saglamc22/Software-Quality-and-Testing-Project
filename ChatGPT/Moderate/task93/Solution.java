@@ -1,0 +1,32 @@
+package task93;
+
+class Solution {
+    public String encode(String message) {
+        if (message == null || message.isEmpty()) {
+            return "";
+        }
+
+        String vowels = "aeiouAEIOU";
+        StringBuilder sb = new StringBuilder();
+
+        for (char c : message.toCharArray()) {
+            char ch = c;
+
+            if (Character.isUpperCase(ch)) {
+                ch = Character.toLowerCase(ch);
+                if (vowels.indexOf(ch) != -1) {
+                    ch = (char) ('a' + ((ch - 'a' + 2) % 26));
+                }
+            } else if (Character.isLowerCase(ch)) {
+                ch = Character.toUpperCase(ch);
+                if (vowels.indexOf(ch) != -1) {
+                    ch = (char) ('A' + ((ch - 'A' + 2) % 26));
+                }
+            }
+
+            sb.append(ch);
+        }
+
+        return sb.toString();
+    }
+}

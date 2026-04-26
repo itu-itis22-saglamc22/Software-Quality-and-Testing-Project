@@ -1,0 +1,21 @@
+package task11;
+
+class Solution {
+    public String stringXor(String a, String b) {
+        if (a == null || b == null || a.length() != b.length()) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < a.length(); i++) {
+            if (a.charAt(i) == b.charAt(i)) {
+                result.append('0');
+            } else {
+                result.append('1');
+            }
+        }
+
+        return result.toString();
+    }
+}
