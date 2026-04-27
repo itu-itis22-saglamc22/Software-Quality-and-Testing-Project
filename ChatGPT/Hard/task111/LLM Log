@@ -1,0 +1,158 @@
+==============================
+LLM INTERACTION LOG — TASK111
+==============================
+
+Task: Java/111
+Objective: Given a string of space-separated tokens, return a histogram (Map) containing only the tokens with the highest frequency.
+
+--------------------------------
+Step 1: Initial Test Conversion
+--------------------------------
+
+Prompt:
+Convert the given main-based test into a proper JUnit test for the histogram method.
+
+LLM Response:
+Provided a JUnit 5 test class using assertEquals with Map comparisons to validate token frequency behavior.
+
+Explanation:
+The output was used directly to replace manual testing with JUnit-based tests, enabling automated execution and integration with JaCoCo.
+
+--------------------------------
+Step 2: Identify Missing Coverage
+--------------------------------
+
+Prompt:
+Improve test cases to ensure full coverage, including edge cases.
+
+LLM Response:
+Suggested adding:
+- empty input case
+- single token case
+- cases with tied maximum frequency
+- cases with a single dominant token
+
+Explanation:
+The method likely consists of:
+1. Building a frequency map
+2. Finding the maximum frequency
+3. Filtering tokens with that frequency
+
+To fully cover logic:
+- Need inputs where multiple tokens tie for max
+- Need inputs where only one token dominates
+- Need minimal inputs (empty and single token)
+
+--------------------------------
+Step 3: Refine Tests for Full Coverage
+--------------------------------
+
+Prompt:
+Add test cases to cover all logical paths including ties, dominant elements, and edge cases.
+
+LLM Response:
+Finalized test suite including:
+- tied maximum frequency
+- filtering out lower-frequency tokens
+- all tokens equal frequency
+- dominant token scenario
+- empty input
+- single token input
+
+Explanation:
+The final test suite ensures:
+- frequency counting logic is correct
+- max frequency selection is validated
+- filtering logic includes only correct tokens
+- edge cases (empty and minimal input) are handled
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task111;
+
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private static final int SINGLE_OCCURRENCE = 1;
+    private static final int TIED_MAX_COUNT = 2;
+    private static final int DOMINANT_B_COUNT = 4;
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void returnsAllTokensTiedForHighestCount() {
+        assertEquals(Map.of("a", TIED_MAX_COUNT, "b", TIED_MAX_COUNT), solution.histogram("a b b a"));
+    }
+
+    @Test
+    void omitsTokensBelowHighestCount() {
+        assertEquals(Map.of("a", TIED_MAX_COUNT, "b", TIED_MAX_COUNT), solution.histogram("a b c a b"));
+    }
+
+    @Test
+    void returnsEveryTokenWhenAllCountsAreTied() {
+        assertEquals(
+                Map.of(
+                        "a", SINGLE_OCCURRENCE,
+                        "b", SINGLE_OCCURRENCE,
+                        "c", SINGLE_OCCURRENCE,
+                        "d", SINGLE_OCCURRENCE,
+                        "g", SINGLE_OCCURRENCE),
+                solution.histogram("a b c d g"));
+    }
+
+    @Test
+    void returnsSingleOccurrenceWordsForShortInput() {
+        assertEquals(
+                Map.of("r", SINGLE_OCCURRENCE, "t", SINGLE_OCCURRENCE, "g", SINGLE_OCCURRENCE),
+                solution.histogram("r t g"));
+    }
+
+    @Test
+    void returnsOnlyDominantTokenWhenOneTokenHasHighestCount() {
+        assertEquals(Map.of("b", DOMINANT_B_COUNT), solution.histogram("b b b b a"));
+    }
+
+    @Test
+    void emptyInputReturnsEmptyHistogram() {
+        assertEquals(Map.of(), solution.histogram(""));
+    }
+
+    @Test
+    void singleTokenInputReturnsThatToken() {
+        assertEquals(Map.of("a", SINGLE_OCCURRENCE), solution.histogram("a"));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite ensures:
+- correct frequency counting
+- proper identification of maximum frequency
+- correct filtering of tokens below maximum
+- handling of tied maximum cases
+- handling of dominant token cases
+- correct behavior for empty and minimal inputs
+
+The LLM-assisted refinement improved completeness and ensured all logical paths in histogram construction and filtering were covered.
