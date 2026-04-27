@@ -1,0 +1,126 @@
+==============================
+LLM INTERACTION LOG — TASK1
+==============================
+
+Task: Java/1
+Objective: Separate multiple balanced parenthesis groups from a string while ignoring spaces.
+
+--------------------------------
+Step 1: Initial Implementation and Test Generation
+--------------------------------
+
+Prompt:
+Create a proper Solution.java and JUnit-compatible test file according to the provided Task1 prompt.
+
+The task requires:
+- reading a string containing balanced parenthesis groups
+- ignoring spaces
+- separating each top-level balanced group into a list of strings
+
+LLM Response:
+Provided a Solution.java implementation using:
+- a StringBuilder to build the current parenthesis group
+- a depth counter to track nesting level
+- adding the current group to the result list when depth returns to zero
+
+Also provided an initial test file based on the original examples.
+
+Explanation:
+The LLM output was used as the base implementation and test suite. The depth counter correctly detects when a complete balanced group has ended.
+
+--------------------------------
+Step 2: Convert to JUnit Testing
+--------------------------------
+
+Prompt:
+Convert the main-based tests into proper JUnit tests for separateParenGroups.
+
+LLM Response:
+Replaced manual assertion logic with JUnit 5 assertEquals tests.
+
+Explanation:
+JUnit was adopted to make the test suite compatible with Maven and JaCoCo coverage measurement.
+
+--------------------------------
+Step 3: Improve Test Quality and Coverage
+--------------------------------
+
+Prompt:
+Improve the test suite to cover different parenthesis grouping patterns and spacing behavior.
+
+LLM Response:
+Suggested test cases for:
+- multiple groups with mixed nesting depth
+- groups with increasing depth
+- one fully nested group without spaces
+- spaces inside parenthesis groups
+
+Explanation:
+The final test suite validates both parsing behavior and space handling. It ensures that spaces are ignored and only balanced top-level groups are returned.
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task1;
+
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void separatesMixedDepthGroups() {
+        assertEquals(
+                List.of("(()())", "((()))", "()", "((())()())"),
+                solution.separateParenGroups("(()()) ((())) () ((())()())"));
+    }
+
+    @Test
+    void separatesIncreasingDepthGroups() {
+        assertEquals(
+                List.of("()", "(())", "((()))", "(((())))"),
+                solution.separateParenGroups("() (()) ((())) (((())))"));
+    }
+
+    @Test
+    void keepsNestedGroupWithoutSpacesAsOneGroup() {
+        assertEquals(
+                List.of("(()(())((())))"),
+                solution.separateParenGroups("(()(())((())))"));
+    }
+
+    @Test
+    void ignoresSpacesInsideGroups() {
+        assertEquals(List.of("()", "(())", "(()())"), solution.separateParenGroups("( ) (( )) (( )( ))"));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates:
+- splitting multiple top-level groups
+- preserving deeply nested groups as one group
+- handling groups of different nesting depths
+- ignoring spaces inside and between groups
+
+The LLM-assisted workflow converted manual tests into JUnit and improved the test suite for automated coverage analysis.
