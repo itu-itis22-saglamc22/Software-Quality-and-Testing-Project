@@ -1,20 +1,32 @@
 package task27;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                Objects.equals(s.flipCase(""), ""),
-                Objects.equals(s.flipCase("Hello!"), "hELLO!"),
-                Objects.equals(s.flipCase("These violent delights have violent ends"),
-                        "tHESE VIOLENT DELIGHTS HAVE VIOLENT ENDS"));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task27: All tests passed.");
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyStringFlipCaseReturnsEmpty() {
+        assertEquals("", solution.flipCase(""));
+    }
+
+    @Test
+    void mixedCaseStringFlipsCorrectly() {
+        assertEquals("hELLO!", solution.flipCase("Hello!"));
+    }
+
+    @Test
+    void longMixedCaseSentenceFlipsCorrectly() {
+        assertEquals(
+            "tHESE VIOLENT DELIGHTS HAVE VIOLENT ENDS",
+            solution.flipCase("These violent delights have violent ends"));
     }
 }
