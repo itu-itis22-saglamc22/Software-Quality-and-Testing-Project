@@ -1,23 +1,34 @@
 package task11;
 
-import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
+class SolutionTest {
 
-        List<Boolean> correct = Arrays.asList(
-                Objects.equals(s.makePalindrome(""), ""),
-                Objects.equals(s.makePalindrome("x"), "x"),
-                Objects.equals(s.makePalindrome("xyz"), "xyzyx"),
-                Objects.equals(s.makePalindrome("xyx"), "xyx"),
-                Objects.equals(s.makePalindrome("jerry"), "jerryrrej"));
+    @Test
+    @DisplayName("Should handle edge cases (null and empty strings)")
+    void testMakePalindrome_EdgeCases() {
+        Solution solution = new Solution();
+        
+        // Bu iki test 'if (string == null || string.isEmpty())' dalını kapsar
+        assertAll("Edge Cases",
+            () -> assertEquals("", solution.makePalindrome(""), "Empty string should return empty"),
+            () -> assertEquals("", solution.makePalindrome(null), "Null should return empty")
+        );
+    }
 
-        if (correct.contains(false)) {
-            int failedIndex = correct.indexOf(false);
-            throw new AssertionError("Test case at index " + failedIndex + " failed!");
-        } else {
-            System.out.println("Task 10: All tests passed successfully!");
-        }
+    @Test
+    @DisplayName("Should create shortest palindrome for various inputs")
+    void testMakePalindrome_Logic() {
+        Solution solution = new Solution();
+        
+        assertAll("Palindrome Logic",
+            () -> assertEquals("x", solution.makePalindrome("x")),
+            () -> assertEquals("xyzyx", solution.makePalindrome("xyz")),
+            () -> assertEquals("xyx", solution.makePalindrome("xyx")),
+            () -> assertEquals("jerryrrej", solution.makePalindrome("jerry")),
+            () -> assertEquals("catac", solution.makePalindrome("cat"))
+        );
     }
 }
