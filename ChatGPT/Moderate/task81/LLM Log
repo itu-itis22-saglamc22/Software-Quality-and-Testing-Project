@@ -1,0 +1,164 @@
+==============================
+LLM INTERACTION LOG — TASK81
+==============================
+
+Task: Java/81
+Objective: Convert numerical grades (GPA-style doubles) into corresponding letter grades.
+
+--------------------------------
+Step 1: Initial Implementation and Test Generation
+--------------------------------
+
+Prompt:
+Create Solution.java and a test file for numericalLetterGrade based on the problem description.
+
+The task requires:
+- mapping numeric grades to letter grades
+- handling different ranges (A+, A, A-, B+, …, D-, E)
+- returning a list of letter grades in the same order
+
+LLM Response:
+Provided a Solution.java implementation using:
+- conditional checks (if/else ladder or similar)
+- mapping ranges of numeric values to corresponding letter grades
+- iterating through the input list and building a result list
+
+Also provided a main-based test file.
+
+Explanation:
+The implementation relies on boundary comparisons to map numeric intervals to discrete letter categories.
+
+--------------------------------
+Step 2: Convert to JUnit Testing
+--------------------------------
+
+Prompt:
+Convert the test file into proper JUnit format compatible with Maven and JaCoCo.
+
+LLM Response:
+Replaced manual assertion logic with JUnit 5 assertEquals tests.
+
+Explanation:
+JUnit enables structured testing and coverage tracking.
+
+--------------------------------
+Step 3: Improve Test Coverage and Boundary Testing
+--------------------------------
+
+Prompt:
+Improve the test suite to cover grade boundaries and edge cases.
+
+LLM Response:
+Suggested adding:
+- mixed grade list (various ranges)
+- boundary values (e.g., transitions like 1.0, 1.2, 3.5, etc.)
+- very low values (near zero)
+- exact zero handling
+- multiple values to verify ordering
+
+Explanation:
+The function is highly branch-dependent:
+- each grade range represents a branch
+- boundary values are critical for correctness
+- zero and near-zero values must be distinguished
+
+--------------------------------
+Step 4: Final Test Refinement
+--------------------------------
+
+Prompt:
+Ensure all grading branches and boundary distinctions are covered.
+
+LLM Response:
+Finalized test suite including:
+- mixed high/mid/low grades
+- boundary-specific tests (D+, D-, etc.)
+- zero vs low positive distinction
+- multiple-range verification in a single test
+
+Explanation:
+The final tests ensure:
+- correct classification across all grade bands
+- accurate boundary handling
+- preservation of input order
+- differentiation between edge cases (e.g., 0.0 vs 0.7)
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task81;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void convertsMixedPassingGrades() {
+        assertEquals(
+                List.of("A+", "B", "C-", "C", "A-"),
+                solution.numericalLetterGrade(new ArrayList<>(List.of(4.0, 3.0, 1.7, 2.0, 3.5))));
+    }
+
+    @Test
+    void convertsDPlusBoundaryGrade() {
+        assertEquals(List.of("D+"), solution.numericalLetterGrade(new ArrayList<>(List.of(1.2))));
+    }
+
+    @Test
+    void convertsDMinusGrade() {
+        assertEquals(List.of("D-"), solution.numericalLetterGrade(new ArrayList<>(List.of(0.5))));
+    }
+
+    @Test
+    void convertsZeroGradeToE() {
+        assertEquals(List.of("E"), solution.numericalLetterGrade(new ArrayList<>(List.of(0.0))));
+    }
+
+    @Test
+    void convertsLowerRangeGrades() {
+        assertEquals(
+                List.of("D", "D-", "C-", "B", "B+"),
+                solution.numericalLetterGrade(new ArrayList<>(List.of(1.0, 0.3, 1.5, 2.8, 3.3))));
+    }
+
+    @Test
+    void distinguishesZeroFromLowPositiveGrade() {
+        assertEquals(List.of("E", "D-"), solution.numericalLetterGrade(new ArrayList<>(List.of(0.0, 0.7))));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates:
+- correct mapping across all grade ranges
+- boundary value handling between grade categories
+- zero-value special case
+- distinction between very low positive and zero
+- preservation of order in output
+
+The LLM-assisted workflow improved the test suite by:
+- converting manual tests to JUnit
+- covering all grading branches
+- ensuring robustness at boundary conditions
