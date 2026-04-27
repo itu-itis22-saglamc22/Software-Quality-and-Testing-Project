@@ -1,19 +1,16 @@
 package task11;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
+class SolutionTest {
+
+    @Test
+    void testStringXor() {
         Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                Objects.equals(s.stringXor("111000", "101010"), "010010"),
-                Objects.equals(s.stringXor("1", "1"), "0"),
-                Objects.equals(s.stringXor("0101", "0000"), "0101"));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task11: All tests passed.");
+
+        assertEquals("010010", s.stringXor("111000", "101010"));
+        assertEquals("0", s.stringXor("1", "1"));
+        assertEquals("0101", s.stringXor("0101", "0000"));
     }
 }
