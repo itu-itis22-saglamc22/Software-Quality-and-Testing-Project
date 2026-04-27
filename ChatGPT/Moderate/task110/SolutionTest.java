@@ -1,23 +1,57 @@
 package task110;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                Objects.equals(s.exchange(Arrays.asList(1, 2, 3, 4), Arrays.asList(1, 2, 3, 4)), "YES"),
-                Objects.equals(s.exchange(Arrays.asList(1, 2, 3, 4), Arrays.asList(1, 5, 3, 4)), "NO"),
-                Objects.equals(s.exchange(Arrays.asList(1, 2, 3, 4), Arrays.asList(2, 1, 4, 3)), "YES"),
-                Objects.equals(s.exchange(Arrays.asList(5, 7, 3), Arrays.asList(2, 6, 4)), "YES"),
-                Objects.equals(s.exchange(Arrays.asList(5, 7, 3), Arrays.asList(2, 6, 3)), "NO"),
-                Objects.equals(s.exchange(Arrays.asList(3, 2, 6, 1, 8, 9), Arrays.asList(3, 5, 5, 1, 1, 1)), "NO"),
-                Objects.equals(s.exchange(Arrays.asList(100, 200), Arrays.asList(200, 200)), "YES"));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task110: All tests passed.");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private static final String EXCHANGE_POSSIBLE = "YES";
+    private static final String EXCHANGE_NOT_POSSIBLE = "NO";
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void balancedOddAndEvenCountsCanBeExchanged() {
+        assertEquals(EXCHANGE_POSSIBLE, solution.exchange(List.of(1, 2, 3, 4), List.of(1, 2, 3, 4)));
+    }
+
+    @Test
+    void notEnoughEvenNumbersInSecondListCannotBeExchanged() {
+        assertEquals(EXCHANGE_NOT_POSSIBLE, solution.exchange(List.of(1, 2, 3, 4), List.of(1, 5, 3, 4)));
+    }
+
+    @Test
+    void reorderedParityValuesCanBeExchanged() {
+        assertEquals(EXCHANGE_POSSIBLE, solution.exchange(List.of(1, 2, 3, 4), List.of(2, 1, 4, 3)));
+    }
+
+    @Test
+    void allOddFirstListCanExchangeWithAllEvenSecondList() {
+        assertEquals(EXCHANGE_POSSIBLE, solution.exchange(List.of(5, 7, 3), List.of(2, 6, 4)));
+    }
+
+    @Test
+    void oneOddInSecondListMakesExchangeImpossible() {
+        assertEquals(EXCHANGE_NOT_POSSIBLE, solution.exchange(List.of(5, 7, 3), List.of(2, 6, 3)));
+    }
+
+    @Test
+    void manyOddValuesNeedEnoughEvenReplacements() {
+        assertEquals(
+                EXCHANGE_NOT_POSSIBLE,
+                solution.exchange(List.of(3, 2, 6, 1, 8, 9), List.of(3, 5, 5, 1, 1, 1)));
+    }
+
+    @Test
+    void largeEvenValuesCanSatisfyExchange() {
+        assertEquals(EXCHANGE_POSSIBLE, solution.exchange(List.of(100, 200), List.of(200, 200)));
     }
 }
