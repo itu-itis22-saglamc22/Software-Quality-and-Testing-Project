@@ -1,20 +1,33 @@
 package task14;
 
-import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 import java.util.List;
 
-class Solution {
-    public List<String> allPrefixes(String string) {
-        List<String> result = new ArrayList<>();
+class SolutionTest {
 
-        if (string == null || string.isEmpty()) {
-            return result;
-        }
+    @Test
+    void testAllPrefixes() {
+        Solution s = new Solution();
 
-        for (int i = 1; i <= string.length(); i++) {
-            result.add(string.substring(0, i));
-        }
+        assertEquals(List.of(), s.allPrefixes(""));
+        assertEquals(Arrays.asList("a", "as", "asd", "asdf", "asdfg", "asdfgh"), s.allPrefixes("asdfgh"));
+        assertEquals(Arrays.asList("W", "WW", "WWW"), s.allPrefixes("WWW"));
+    }
 
-        return result;
+    @Test
+    void testNullInput() {
+        Solution s = new Solution();
+
+        assertEquals(List.of(), s.allPrefixes(null));
+    }
+
+    @Test
+    void testSingleCharacter() {
+        Solution s = new Solution();
+
+        assertEquals(List.of("A"), s.allPrefixes("A"));
     }
 }
