@@ -1,21 +1,41 @@
 package task10;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                Objects.equals(s.makePalindrome(""), ""),
-                Objects.equals(s.makePalindrome("x"), "x"),
-                Objects.equals(s.makePalindrome("xyz"), "xyzyx"),
-                Objects.equals(s.makePalindrome("xyx"), "xyx"),
-                Objects.equals(s.makePalindrome("jerry"), "jerryrrej"));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task10: All tests passed.");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyStringRemainsEmpty() {
+        assertEquals("", solution.makePalindrome(""));
+    }
+
+    @Test
+    void singleCharacterIsAlreadyPalindrome() {
+        assertEquals("x", solution.makePalindrome("x"));
+    }
+
+    @Test
+    void appendsReversePrefixForNonPalindrome() {
+        assertEquals("xyzyx", solution.makePalindrome("xyz"));
+    }
+
+    @Test
+    void existingPalindromeIsUnchanged() {
+        assertEquals("xyx", solution.makePalindrome("xyx"));
+    }
+
+    @Test
+    void appendsOnlyNeededPrefixForWordWithPalindromicSuffix() {
+        assertEquals("jerryrrej", solution.makePalindrome("jerry"));
     }
 }

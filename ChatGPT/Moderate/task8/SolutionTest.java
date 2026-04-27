@@ -1,21 +1,43 @@
 package task8;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.sumProduct(new ArrayList<>(List.of())).equals(Arrays.asList(0, 1)),
-                s.sumProduct(new ArrayList<>(Arrays.asList(1, 1, 1))).equals(Arrays.asList(3, 1)),
-                s.sumProduct(new ArrayList<>(Arrays.asList(100, 0))).equals(Arrays.asList(100, 0)),
-                s.sumProduct(new ArrayList<>(Arrays.asList(3, 5, 7))).equals(Arrays.asList(15, 105)),
-                s.sumProduct(new ArrayList<>(List.of(10))).equals(Arrays.asList(10, 10)));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task8: All tests passed.");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyListReturnsSumZeroAndProductIdentity() {
+        assertEquals(List.of(0, 1), solution.sumProduct(new ArrayList<>()));
+    }
+
+    @Test
+    void allOnesHaveSumThreeAndProductOne() {
+        assertEquals(List.of(3, 1), solution.sumProduct(new ArrayList<>(List.of(1, 1, 1))));
+    }
+
+    @Test
+    void zeroElementMakesProductZero() {
+        assertEquals(List.of(100, 0), solution.sumProduct(new ArrayList<>(List.of(100, 0))));
+    }
+
+    @Test
+    void positiveValuesReturnTheirSumAndProduct() {
+        assertEquals(List.of(15, 105), solution.sumProduct(new ArrayList<>(List.of(3, 5, 7))));
+    }
+
+    @Test
+    void singleValueIsBothSumAndProduct() {
+        assertEquals(List.of(10, 10), solution.sumProduct(new ArrayList<>(List.of(10))));
     }
 }

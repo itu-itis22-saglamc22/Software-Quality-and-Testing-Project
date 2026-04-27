@@ -1,19 +1,37 @@
 package task163;
 
-import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.generateIntegers(2, 10).equals(Arrays.asList(2, 4, 6, 8)),
-                s.generateIntegers(10, 2).equals(Arrays.asList(2, 4, 6, 8)),
-                s.generateIntegers(132, 2).equals(Arrays.asList(2, 4, 6, 8)),
-                s.generateIntegers(17, 89).equals(List.of()));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task163: All tests passed.");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void returnsEvenIntegersWithinForwardRange() {
+        assertEquals(List.of(2, 4, 6, 8), solution.generateIntegers(2, 10));
+    }
+
+    @Test
+    void returnsEvenIntegersWithinReversedRange() {
+        assertEquals(List.of(2, 4, 6, 8), solution.generateIntegers(10, 2));
+    }
+
+    @Test
+    void capsRangeAtUpperEvenBound() {
+        assertEquals(List.of(2, 4, 6, 8), solution.generateIntegers(132, 2));
+    }
+
+    @Test
+    void returnsEmptyListWhenRangeDoesNotOverlapAllowedValues() {
+        assertEquals(List.of(), solution.generateIntegers(17, 89));
     }
 }

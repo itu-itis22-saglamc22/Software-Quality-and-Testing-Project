@@ -1,42 +1,130 @@
 package task129;
 
-import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.minPath(Arrays.asList(Arrays.asList(1, 2, 3), Arrays.asList(4, 5, 6), Arrays.asList(7, 8, 9)), 3)
-                        .equals(Arrays.asList(1, 2, 1)),
-                s.minPath(Arrays.asList(Arrays.asList(5, 9, 3), Arrays.asList(4, 1, 6), Arrays.asList(7, 8, 2)), 1)
-                        .equals(List.of(1)),
-                s.minPath(Arrays.asList(Arrays.asList(1, 2, 3, 4), Arrays.asList(5, 6, 7, 8),
-                        Arrays.asList(9, 10, 11, 12), Arrays.asList(13, 14, 15, 16)), 4)
-                        .equals(Arrays.asList(1, 2, 1, 2)),
-                s.minPath(Arrays.asList(Arrays.asList(6, 4, 13, 10), Arrays.asList(5, 7, 12, 1),
-                        Arrays.asList(3, 16, 11, 15), Arrays.asList(8, 14, 9, 2)), 7)
-                        .equals(Arrays.asList(1, 10, 1, 10, 1, 10, 1)),
-                s.minPath(Arrays.asList(Arrays.asList(8, 14, 9, 2), Arrays.asList(6, 4, 13, 15),
-                        Arrays.asList(5, 7, 1, 12), Arrays.asList(3, 10, 11, 16)), 5)
-                        .equals(Arrays.asList(1, 7, 1, 7, 1)),
-                s.minPath(Arrays.asList(Arrays.asList(11, 8, 7, 2), Arrays.asList(5, 16, 14, 4),
-                        Arrays.asList(9, 3, 15, 6), Arrays.asList(12, 13, 10, 1)), 9)
-                        .equals(Arrays.asList(1, 6, 1, 6, 1, 6, 1, 6, 1)),
-                s.minPath(Arrays.asList(Arrays.asList(12, 13, 10, 1), Arrays.asList(9, 3, 15, 6),
-                        Arrays.asList(5, 16, 14, 4), Arrays.asList(11, 8, 7, 2)), 12)
-                        .equals(Arrays.asList(1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6)),
-                s.minPath(Arrays.asList(Arrays.asList(2, 7, 4), Arrays.asList(3, 1, 5), Arrays.asList(6, 8, 9)), 8)
-                        .equals(Arrays.asList(1, 3, 1, 3, 1, 3, 1, 3)),
-                s.minPath(Arrays.asList(Arrays.asList(6, 1, 5), Arrays.asList(3, 8, 9), Arrays.asList(2, 7, 4)), 8)
-                        .equals(Arrays.asList(1, 5, 1, 5, 1, 5, 1, 5)),
-                s.minPath(Arrays.asList(Arrays.asList(1, 2), Arrays.asList(3, 4)), 10)
-                        .equals(Arrays.asList(1, 2, 1, 2, 1, 2, 1, 2, 1, 2)),
-                s.minPath(Arrays.asList(Arrays.asList(1, 3), Arrays.asList(3, 2)), 10)
-                        .equals(Arrays.asList(1, 3, 1, 3, 1, 3, 1, 3, 1, 3)));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task129: All tests passed.");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void orderedThreeByThreeAlternatesWithRightNeighbor() {
+        List<List<Integer>> grid = List.of(
+                List.of(1, 2, 3),
+                List.of(4, 5, 6),
+                List.of(7, 8, 9));
+
+        assertEquals(List.of(1, 2, 1), solution.minPath(grid, 3));
+    }
+
+    @Test
+    void lengthOnePathContainsOnlyTheMinimumCell() {
+        List<List<Integer>> grid = List.of(
+                List.of(5, 9, 3),
+                List.of(4, 1, 6),
+                List.of(7, 8, 2));
+
+        assertEquals(List.of(1), solution.minPath(grid, 1));
+    }
+
+    @Test
+    void orderedFourByFourAlternatesWithNearestNeighbor() {
+        List<List<Integer>> grid = List.of(
+                List.of(1, 2, 3, 4),
+                List.of(5, 6, 7, 8),
+                List.of(9, 10, 11, 12),
+                List.of(13, 14, 15, 16));
+
+        assertEquals(List.of(1, 2, 1, 2), solution.minPath(grid, 4));
+    }
+
+    @Test
+    void rightEdgeMinimumUsesLeftNeighbor() {
+        List<List<Integer>> grid = List.of(
+                List.of(6, 4, 13, 10),
+                List.of(5, 7, 12, 1),
+                List.of(3, 16, 11, 15),
+                List.of(8, 14, 9, 2));
+
+        assertEquals(List.of(1, 10, 1, 10, 1, 10, 1), solution.minPath(grid, 7));
+    }
+
+    @Test
+    void interiorMinimumUsesSmallestAdjacentValue() {
+        List<List<Integer>> grid = List.of(
+                List.of(8, 14, 9, 2),
+                List.of(6, 4, 13, 15),
+                List.of(5, 7, 1, 12),
+                List.of(3, 10, 11, 16));
+
+        assertEquals(List.of(1, 7, 1, 7, 1), solution.minPath(grid, 5));
+    }
+
+    @Test
+    void bottomRightMinimumUsesSmallestAdjacentValueForNineSteps() {
+        List<List<Integer>> grid = List.of(
+                List.of(11, 8, 7, 2),
+                List.of(5, 16, 14, 4),
+                List.of(9, 3, 15, 6),
+                List.of(12, 13, 10, 1));
+
+        assertEquals(List.of(1, 6, 1, 6, 1, 6, 1, 6, 1), solution.minPath(grid, 9));
+    }
+
+    @Test
+    void topRightMinimumUsesSmallestAdjacentValueForTwelveSteps() {
+        List<List<Integer>> grid = List.of(
+                List.of(12, 13, 10, 1),
+                List.of(9, 3, 15, 6),
+                List.of(5, 16, 14, 4),
+                List.of(11, 8, 7, 2));
+
+        assertEquals(List.of(1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6), solution.minPath(grid, 12));
+    }
+
+    @Test
+    void centeredMinimumUsesUpperNeighborWhenItIsSmallest() {
+        List<List<Integer>> grid = List.of(
+                List.of(2, 7, 4),
+                List.of(3, 1, 5),
+                List.of(6, 8, 9));
+
+        assertEquals(List.of(1, 3, 1, 3, 1, 3, 1, 3), solution.minPath(grid, 8));
+    }
+
+    @Test
+    void topCenterMinimumUsesRightNeighborWhenItIsSmallest() {
+        List<List<Integer>> grid = List.of(
+                List.of(6, 1, 5),
+                List.of(3, 8, 9),
+                List.of(2, 7, 4));
+
+        assertEquals(List.of(1, 5, 1, 5, 1, 5, 1, 5), solution.minPath(grid, 8));
+    }
+
+    @Test
+    void twoByTwoGridAlternatesForTenSteps() {
+        List<List<Integer>> grid = List.of(
+                List.of(1, 2),
+                List.of(3, 4));
+
+        assertEquals(List.of(1, 2, 1, 2, 1, 2, 1, 2, 1, 2), solution.minPath(grid, 10));
+    }
+
+    @Test
+    void twoByTwoGridUsesTiedNeighborValueForTenSteps() {
+        List<List<Integer>> grid = List.of(
+                List.of(1, 3),
+                List.of(3, 2));
+
+        assertEquals(List.of(1, 3, 1, 3, 1, 3, 1, 3, 1, 3), solution.minPath(grid, 10));
     }
 }

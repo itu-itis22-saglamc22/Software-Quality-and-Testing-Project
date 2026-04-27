@@ -1,23 +1,51 @@
 package task143;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                Objects.equals(s.wordsInSentence("This is a test"), "is"),
-                Objects.equals(s.wordsInSentence("lets go for swimming"), "go for"),
-                Objects.equals(s.wordsInSentence("there is no place available here"), "there is no place"),
-                Objects.equals(s.wordsInSentence("Hi I am Hussein"), "Hi am Hussein"),
-                Objects.equals(s.wordsInSentence("go for it"), "go for it"),
-                Objects.equals(s.wordsInSentence("here"), ""),
-                Objects.equals(s.wordsInSentence("here is"), "is"));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task143: All tests passed.");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void keepsOnlyPrimeLengthWordInShortSentence() {
+        assertEquals("is", solution.wordsInSentence("This is a test"));
+    }
+
+    @Test
+    void keepsMultiplePrimeLengthWords() {
+        assertEquals("go for", solution.wordsInSentence("lets go for swimming"));
+    }
+
+    @Test
+    void dropsWordsWhoseLengthsAreNotPrime() {
+        assertEquals("there is no place", solution.wordsInSentence("there is no place available here"));
+    }
+
+    @Test
+    void keepsPrimeLengthNamesAndShortWords() {
+        assertEquals("Hi am Hussein", solution.wordsInSentence("Hi I am Hussein"));
+    }
+
+    @Test
+    void keepsAllWordsWhenEveryLengthIsPrime() {
+        assertEquals("go for it", solution.wordsInSentence("go for it"));
+    }
+
+    @Test
+    void returnsEmptyStringWhenNoWordLengthIsPrime() {
+        assertEquals("", solution.wordsInSentence("here"));
+    }
+
+    @Test
+    void keepsPrimeLengthWordAfterNonPrimeWord() {
+        assertEquals("is", solution.wordsInSentence("here is"));
     }
 }

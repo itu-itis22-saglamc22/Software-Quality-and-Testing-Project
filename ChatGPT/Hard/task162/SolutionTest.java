@@ -1,20 +1,42 @@
 package task162;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.stringToMd5("Hello world").get().equals("3e25960a79dbc69b674cd4ec67a72c62"),
-                s.stringToMd5("").isEmpty(),
-                s.stringToMd5("A B C").get().equals("0ef78513b0cb8cef12743f5aeb35f888"),
-                s.stringToMd5("password").get().equals("5f4dcc3b5aa765d61d8327deb882cf99"));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task162: All tests passed.");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class SolutionTest {
+
+    private static final String HELLO_WORLD_MD5 = "3e25960a79dbc69b674cd4ec67a72c62";
+    private static final String SPACED_LETTERS_MD5 = "0ef78513b0cb8cef12743f5aeb35f888";
+    private static final String PASSWORD_MD5 = "5f4dcc3b5aa765d61d8327deb882cf99";
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void hashesHelloWorldText() throws NoSuchAlgorithmException {
+        assertEquals(HELLO_WORLD_MD5, solution.stringToMd5("Hello world").orElseThrow());
+    }
+
+    @Test
+    void emptyTextReturnsEmptyOptional() throws NoSuchAlgorithmException {
+        assertTrue(solution.stringToMd5("").isEmpty());
+    }
+
+    @Test
+    void hashesTextContainingSpaces() throws NoSuchAlgorithmException {
+        assertEquals(SPACED_LETTERS_MD5, solution.stringToMd5("A B C").orElseThrow());
+    }
+
+    @Test
+    void hashesPasswordText() throws NoSuchAlgorithmException {
+        assertEquals(PASSWORD_MD5, solution.stringToMd5("password").orElseThrow());
     }
 }

@@ -1,22 +1,36 @@
 package task12;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.longest(new ArrayList<>(List.of())).isEmpty(),
-                Objects.equals(s.longest(new ArrayList<>(Arrays.asList("x", "y", "z"))).get(), "x"),
-                Objects.equals(
-                        s.longest(new ArrayList<>(Arrays.asList("x", "yyy", "zzzz", "www", "kkkk", "abc"))).get(),
-                        "zzzz"));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task12: All tests passed.");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyListReturnsEmptyOptional() {
+        assertTrue(solution.longest(new ArrayList<>()).isEmpty());
+    }
+
+    @Test
+    void firstStringWinsWhenAllLengthsAreEqual() {
+        assertEquals("x", solution.longest(new ArrayList<>(List.of("x", "y", "z"))).orElseThrow());
+    }
+
+    @Test
+    void longestStringIsReturned() {
+        assertEquals(
+                "zzzz",
+                solution.longest(new ArrayList<>(List.of("x", "yyy", "zzzz", "www", "kkkk", "abc"))).orElseThrow());
     }
 }
