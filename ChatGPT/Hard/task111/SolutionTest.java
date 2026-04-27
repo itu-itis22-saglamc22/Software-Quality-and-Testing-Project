@@ -1,61 +1,65 @@
 package task111;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-        Map<String, Integer> map1 = new HashMap<>();
-        map1.put("a", 2);
-        map1.put("b", 2);
+class SolutionTest {
 
-        Map<String, Integer> map2 = new HashMap<>();
-        map2.put("a", 2);
-        map2.put("b", 2);
+    private static final int SINGLE_OCCURRENCE = 1;
+    private static final int TIED_MAX_COUNT = 2;
+    private static final int DOMINANT_B_COUNT = 4;
 
-        Map<String, Integer> map3 = new HashMap<>();
-        map3.put("a", 1);
-        map3.put("b", 1);
-        map3.put("c", 1);
-        map3.put("d", 1);
-        map3.put("g", 1);
+    private Solution solution;
 
-        Map<String, Integer> map4 = new HashMap<>();
-        map4.put("r", 1);
-        map4.put("t", 1);
-        map4.put("g", 1);
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
 
-        Map<String, Integer> map5 = new HashMap<>();
-        map5.put("b", 4);
+    @Test
+    void returnsAllTokensTiedForHighestCount() {
+        assertEquals(Map.of("a", TIED_MAX_COUNT, "b", TIED_MAX_COUNT), solution.histogram("a b b a"));
+    }
 
-        Map<String, Integer> map6 = new HashMap<>();
-        map6.put("r", 1);
-        map6.put("t", 1);
-        map6.put("g", 1);
+    @Test
+    void omitsTokensBelowHighestCount() {
+        assertEquals(Map.of("a", TIED_MAX_COUNT, "b", TIED_MAX_COUNT), solution.histogram("a b c a b"));
+    }
 
-        Map<String, Integer> map7 = new HashMap<>();
+    @Test
+    void returnsEveryTokenWhenAllCountsAreTied() {
+        assertEquals(
+                Map.of(
+                        "a", SINGLE_OCCURRENCE,
+                        "b", SINGLE_OCCURRENCE,
+                        "c", SINGLE_OCCURRENCE,
+                        "d", SINGLE_OCCURRENCE,
+                        "g", SINGLE_OCCURRENCE),
+                solution.histogram("a b c d g"));
+    }
 
-        Map<String, Integer> map8 = new HashMap<>();
-        map8.put("a", 1);
+    @Test
+    void returnsSingleOccurrenceWordsForShortInput() {
+        assertEquals(
+                Map.of("r", SINGLE_OCCURRENCE, "t", SINGLE_OCCURRENCE, "g", SINGLE_OCCURRENCE),
+                solution.histogram("r t g"));
+    }
 
-        List<Boolean> correct = Arrays.asList(
-                s.histogram("a b b a").equals(map1),
-                s.histogram("a b c a b").equals(map2),
-                s.histogram("a b c d g").equals(map3),
-                s.histogram("r t g").equals(map4),
-                s.histogram("b b b b a").equals(map5),
-                s.histogram("r t g").equals(map6),
-                s.histogram("").equals(map7),
-                s.histogram("a").equals(map8));
+    @Test
+    void returnsOnlyDominantTokenWhenOneTokenHasHighestCount() {
+        assertEquals(Map.of("b", DOMINANT_B_COUNT), solution.histogram("b b b b a"));
+    }
 
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
+    @Test
+    void emptyInputReturnsEmptyHistogram() {
+        assertEquals(Map.of(), solution.histogram(""));
+    }
 
-        System.out.println("Task111: All tests passed.");
+    @Test
+    void singleTokenInputReturnsThatToken() {
+        assertEquals(Map.of("a", SINGLE_OCCURRENCE), solution.histogram("a"));
     }
 }
