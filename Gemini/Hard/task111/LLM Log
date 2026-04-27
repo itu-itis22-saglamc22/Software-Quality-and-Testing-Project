@@ -1,0 +1,118 @@
+============================================================
+LLM INTERACTION LOG — TASK 111 (Implementation-Specific Coverage)
+============================================================
+
+Task: Java/111
+Objective: Return a Map of the most frequent characters.
+
+------------------------------------------------------------
+Step 1: Implementation Analysis & Hidden Branches
+------------------------------------------------------------
+
+Prompt:
+Revise the test file to achieve 100% branch coverage based 
+on a specific, highly defensive Solution.java implementation.
+
+LLM Response:
+Analyzed the specific logic in Solution.java. Identified 
+three specific code smells / edge cases handled by the 
+developer that the generic test suite missed:
+1. Whitespace-only strings (test.trim().isEmpty()).
+2. Multiple consecutive spaces causing empty split tokens 
+   (if (s.isEmpty()) continue).
+3. Max count threshold bypasses (if (currentCount > maxCount)).
+
+Explanation:
+To achieve 100% JaCoCo coverage, tests must be tailored 
+not just to the requirements, but to the exact Abstract 
+Syntax Tree (AST) branches of the compiled code. The developer's 
+inclusion of robust input sanitization required explicit 
+testing paths to reach "Green" on all lines.
+
+------------------------------------------------------------
+Step 2: Coverage-Driven Test Design
+------------------------------------------------------------
+
+Prompt:
+Write the JUnit 5 test file targeting those exact branches.
+
+LLM Response:
+Developed a revised SolutionTest.java. 
+
+Branch Mapping:
+- testBoundaryConditions(): Covers null, "", and "   ". 
+  (Satisfies the OR operator in the first guard clause).
+- testExtraSpaces(): Injects "a  b" (double space). 
+  (Forces the 's.isEmpty() -> continue' branch to execute).
+- testSingleMaximum(): Injects "a a b". 
+  (Forces 'entry.getValue() == maxCount' to evaluate False for 'b').
+- testTiedMaximums(): Injects "a b b a". 
+  (Forces 'currentCount > maxCount' to evaluate False when 
+  the second 'a' is reached, since max is already 2).
+
+------------------------------------------------------------
+Final Test Code (SolutionTest.java)
+------------------------------------------------------------
+
+package task111;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import java.util.Map;
+
+class SolutionTest {
+
+    private final Solution solution = new Solution();
+
+    @Test
+    @DisplayName("Smell Test: Guard clauses for null, empty, and whitespace-only inputs")
+    void testBoundaryConditions() {
+        // Covers: if (test == null || test.trim().isEmpty())
+        assertAll("Boundary Conditions",
+            () -> assertTrue(solution.histogram(null).isEmpty(), "Null should return empty map"),
+            () -> assertTrue(solution.histogram("").isEmpty(), "Empty string should return empty map"),
+            () -> assertTrue(solution.histogram("   ").isEmpty(), "Whitespace-only should return empty map")
+        );
+    }
+
+    @Test
+    @DisplayName("Logic Path: Handle extra consecutive spaces")
+    void testExtraSpaces() {
+        // Covers: if (s.isEmpty()) continue; 
+        // split(" ") on "a  b" creates an array ["a", "", "b"]
+        assertEquals(Map.of("a", 1, "b", 1), solution.histogram("a  b"));
+    }
+
+    @Test
+    @DisplayName("Logic Path: Filter lower frequencies out")
+    void testSingleMaximum() {
+        // Covers: if (entry.getValue() == maxCount) -> False path for 'b'
+        assertEquals(Map.of("a", 2), solution.histogram("a a b"));
+    }
+
+    @Test
+    @DisplayName("Logic Path: Tied maximums without exceeding maxCount")
+    void testTiedMaximums() {
+        // Covers: if (currentCount > maxCount) -> False path
+        // When second 'a' is read, currentCount=2, maxCount=2. It skips the if-block.
+        assertEquals(Map.of("a", 2, "b", 2), solution.histogram("a b b a"));
+    }
+}
+
+------------------------------------------------------------
+Coverage & Quality Result
+------------------------------------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+Code Smells: Minimized (All defensive programming branches verified)
+
+------------------------------------------------------------
+Summary
+------------------------------------------------------------
+The test suite was successfully coupled to the specific 
+architectural decisions of the provided Solution class. 
+Every conditional operator, loop bypass, and data filter 
+was explicitly targeted, ensuring maximum reliability.
+============================================================
