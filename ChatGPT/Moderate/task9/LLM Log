@@ -1,0 +1,154 @@
+==============================
+LLM INTERACTION LOG — TASK9
+==============================
+
+Task: Java/9
+Objective: Generate a list of rolling maximums for a sequence of integers.
+
+--------------------------------
+Step 1: Initial Implementation and Test Generation
+--------------------------------
+
+Prompt:
+Create Solution.java and a test file for rollingMax based on the problem description.
+
+The task requires:
+- iterating through the list
+- tracking the maximum value seen so far
+- appending the current maximum at each step
+- returning an empty list for empty input
+
+LLM Response:
+Provided a Solution.java implementation using:
+- an empty-list check
+- a variable to store the current rolling maximum
+- iteration updating the maximum when a larger value is found
+- building a result list incrementally
+
+Also provided a main-based test file.
+
+Explanation:
+The implementation correctly handles:
+- initialization from the first element
+- updating the rolling maximum conditionally
+- sequential accumulation of results
+
+--------------------------------
+Step 2: Convert to JUnit Testing
+--------------------------------
+
+Prompt:
+Convert the test into proper JUnit format for use with Maven and JaCoCo.
+
+LLM Response:
+Replaced manual assertions with JUnit 5 assertEquals tests.
+
+Explanation:
+JUnit allows automated execution and enables coverage reporting.
+
+--------------------------------
+Step 3: Improve Test Coverage and Edge Cases
+--------------------------------
+
+Prompt:
+Improve the test suite to cover edge cases and different value patterns.
+
+LLM Response:
+Suggested adding:
+- empty list case
+- strictly increasing sequence
+- strictly decreasing sequence
+- sequence with a later larger value
+
+Explanation:
+The method has key logical branches:
+- early return for empty list
+- branch where new value > rolling max (update)
+- branch where new value ≤ rolling max (no update)
+
+--------------------------------
+Step 4: Final Test Refinement
+--------------------------------
+
+Prompt:
+Ensure all branches and behaviors are fully covered.
+
+LLM Response:
+Finalized test suite including:
+- empty input
+- increasing sequence
+- decreasing sequence
+- mixed sequence with a new peak
+
+Explanation:
+These tests ensure:
+- correct handling of empty input
+- correct initialization of rolling maximum
+- correct behavior when values increase or decrease
+- proper update when a new maximum appears
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task9;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyListReturnsEmptyRollingMaximums() {
+        assertEquals(List.of(), solution.rollingMax(new ArrayList<>()));
+    }
+
+    @Test
+    void increasingValuesAreTheirOwnRollingMaximums() {
+        assertEquals(List.of(1, 2, 3, 4), solution.rollingMax(new ArrayList<>(List.of(1, 2, 3, 4))));
+    }
+
+    @Test
+    void decreasingValuesKeepFirstValueAsRollingMaximum() {
+        assertEquals(List.of(4, 4, 4, 4), solution.rollingMax(new ArrayList<>(List.of(4, 3, 2, 1))));
+    }
+
+    @Test
+    void laterPeakBecomesNewRollingMaximum() {
+        assertEquals(List.of(3, 3, 3, 100, 100), solution.rollingMax(new ArrayList<>(List.of(3, 2, 3, 100, 3))));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates:
+- correct handling of empty input
+- proper initialization of rolling maximum
+- behavior for increasing sequences
+- behavior for decreasing sequences
+- correct update when a new maximum appears
+
+The LLM-assisted workflow improved the test suite by:
+- converting manual tests to JUnit
+- covering all logical branches
+- ensuring correctness across different sequence patterns
