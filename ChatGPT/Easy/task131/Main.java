@@ -1,21 +1,19 @@
 package task131;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
+class SolutionTest {
+
+    @Test
+    void testDigits() {
         Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.digits(5) == 5,
-                s.digits(54) == 5,
-                s.digits(120) == 1,
-                s.digits(5014) == 5,
-                s.digits(98765) == 315,
-                s.digits(5576543) == 2625);
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task131: All tests passed.");
+
+        assertEquals(5, s.digits(5));
+        assertEquals(5, s.digits(54));
+        assertEquals(1, s.digits(120));
+        assertEquals(5, s.digits(5014));
+        assertEquals(315, s.digits(98765));
+        assertEquals(2625, s.digits(5576543));
     }
 }
