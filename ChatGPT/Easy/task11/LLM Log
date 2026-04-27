@@ -1,0 +1,130 @@
+==============================
+LLM INTERACTION LOG — TASK11
+==============================
+
+Task: Java/11
+Objective: Perform binary XOR operation on two equal-length binary strings.
+
+--------------------------------
+Step 1: Initial Testing Setup
+--------------------------------
+
+Prompt:
+Convert the given main-based test into a proper JUnit test for the stringXor method.
+
+LLM Response:
+Provided a JUnit 5 test class using @Test and assertEquals for validating XOR results on given examples.
+
+Explanation:
+The output was used directly to replace manual testing with automated JUnit-based testing, enabling integration with Maven and JaCoCo.
+
+--------------------------------
+Step 2: Identify Missing Branch Coverage
+--------------------------------
+
+Prompt:
+Improve the test cases to ensure better coverage of the stringXor method, including edge cases.
+
+LLM Response:
+Suggested adding tests for:
+- null inputs
+- unequal length strings
+- empty strings
+- general valid cases
+
+Explanation:
+The original tests only covered the main logic loop (character comparison). However, the method also contains an early return branch:
+    if (a == null || b == null || a.length() != b.length())
+        return "";
+
+These branches were not covered, resulting in incomplete branch coverage.
+
+--------------------------------
+Step 3: Refine Tests for Full Branch Coverage
+--------------------------------
+
+Prompt:
+Add missing edge case tests to achieve full branch coverage.
+
+LLM Response:
+Extended the test suite to include:
+- null input cases
+- mismatched length inputs
+- empty string inputs
+
+Explanation:
+The response was partially modified and extended to ensure:
+- Coverage of the early return condition
+- Validation of behavior when inputs are invalid
+- Full execution of both branches of the conditional statement
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task11;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void stringXorWithMixedBitsReturnsCorrectResult() {
+        assertEquals("010010", solution.stringXor("111000", "101010"));
+    }
+
+    @Test
+    void stringXorOfIdenticalOnesReturnsZero() {
+        assertEquals("0", solution.stringXor("1", "1"));
+    }
+
+    @Test
+    void stringXorWithAllZerosReturnsSameString() {
+        assertEquals("0101", solution.stringXor("0101", "0000"));
+    }
+
+    @Test
+    void stringXorWithNullInputReturnsEmptyString() {
+        assertEquals("", solution.stringXor(null, "1010"));
+        assertEquals("", solution.stringXor("1010", null));
+    }
+
+    @Test
+    void stringXorWithDifferentLengthsReturnsEmptyString() {
+        assertEquals("", solution.stringXor("101", "10"));
+    }
+
+    @Test
+    void stringXorWithEmptyStringsReturnsEmptyString() {
+        assertEquals("", solution.stringXor("", ""));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The initial test suite validated only the core XOR logic but failed to cover input validation branches.
+
+After refinement:
+- All conditional branches were exercised
+- Edge cases were properly handled
+- Full branch coverage was achieved
+
+The LLM-assisted process improved both correctness and robustness of the test suite.
