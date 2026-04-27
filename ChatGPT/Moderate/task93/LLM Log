@@ -1,0 +1,167 @@
+==============================
+LLM INTERACTION LOG — TASK93
+==============================
+
+Task: Java/93
+Objective: Encode a message by:
+- swapping the case of all letters
+- replacing vowels with the letter two positions ahead in the alphabet (with wrap-around)
+- preserving spaces
+
+--------------------------------
+Step 1: Initial Implementation and Test Generation
+--------------------------------
+
+Prompt:
+Create Solution.java and a test file for encode based on the problem description.
+
+The task requires:
+- iterating through characters
+- detecting uppercase/lowercase letters
+- swapping case
+- detecting vowels after case change
+- shifting vowels by +2 positions in the alphabet
+- preserving non-letter characters (spaces)
+
+LLM Response:
+Provided a Solution.java implementation using:
+- Character.isUpperCase / isLowerCase
+- case conversion via toLowerCase / toUpperCase
+- vowel checking using a predefined string
+- modular arithmetic for alphabet shifting
+- StringBuilder for efficient string construction
+
+Also provided a main-based test file.
+
+Explanation:
+The implementation combines two transformations:
+1. case inversion
+2. conditional vowel shifting
+
+--------------------------------
+Step 2: Convert to JUnit Testing
+--------------------------------
+
+Prompt:
+Convert the test file into proper JUnit format compatible with Maven and JaCoCo.
+
+LLM Response:
+Replaced manual assertion logic with JUnit 5 assertEquals tests.
+
+Explanation:
+JUnit enables automated testing and coverage reporting.
+
+--------------------------------
+Step 3: Improve Test Coverage and Behavioral Cases
+--------------------------------
+
+Prompt:
+Improve the test suite to cover different input patterns including uppercase, lowercase, mixed case, and sentences.
+
+LLM Response:
+Suggested adding:
+- fully uppercase input
+- mixed-case names
+- vowel-heavy words
+- full sentences with spaces
+- alternating case patterns
+
+Explanation:
+The function has multiple logical branches:
+- uppercase → lowercase path
+- lowercase → uppercase path
+- vowel detection and transformation
+- non-vowel pass-through
+- space preservation
+
+--------------------------------
+Step 4: Final Test Refinement
+--------------------------------
+
+Prompt:
+Ensure all transformation rules and branches are exercised.
+
+LLM Response:
+Finalized test suite covering:
+- uppercase-only transformation
+- mixed-case transformation
+- vowel shifting behavior
+- sentence-level transformation with spaces
+- complex alternating case input
+
+Explanation:
+These tests ensure:
+- correct case swapping
+- correct vowel detection after case swap
+- correct alphabet shifting with wrap-around
+- correct handling of spaces
+- correctness across mixed patterns
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task93;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void encodesUppercaseWord() {
+        assertEquals("tgst", solution.encode("TEST"));
+    }
+
+    @Test
+    void encodesMixedCaseName() {
+        assertEquals("mWDCSKR", solution.encode("Mudasir"));
+    }
+
+    @Test
+    void encodesUppercaseWordWithVowelShift() {
+        assertEquals("ygs", solution.encode("YES"));
+    }
+
+    @Test
+    void encodesSentenceWithSpaces() {
+        assertEquals("tHKS KS C MGSSCGG", solution.encode("This is a message"));
+    }
+
+    @Test
+    void encodesAlternatingCaseSentence() {
+        assertEquals("k dQnT kNqW wHcT Tq wRkTg", solution.encode("I DoNt KnOw WhAt tO WrItE"));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates:
+- case swapping for both uppercase and lowercase letters
+- vowel detection and transformation after case change
+- correct alphabetical shifting with wrap-around
+- preservation of spaces
+- correctness across simple and complex input patterns
+
+The LLM-assisted workflow improved the test suite by:
+- converting manual tests to JUnit
+- covering all transformation branches
+- validating behavior across diverse string patterns
