@@ -1,0 +1,43 @@
+============================================================
+LLM INTERACTION LOG — TASK 115 (Smell Tests & Coverage)
+============================================================
+
+Task: Java/115
+Objective: Given a 2D grid of integers (1s and 0s) and a 
+bucket 'capacity', calculate the total number of trips 
+required to extract all 1s, assuming each row is processed 
+independently.
+
+------------------------------------------------------------
+Step 1: Initial Implementation & Division Logic
+------------------------------------------------------------
+
+Prompt:
+Implement the maxFill(List<List<Integer>> grid, int capacity) 
+function. It needs to count the 1s in each row and determine 
+how many buckets of 'capacity' are needed per row.
+
+LLM Response:
+Provided Solution.java using a nested loop. Counted the 1s 
+per row and used ceiling math to calculate the trips: 
+Math.ceil((double) onesCount / capacity).
+
+Explanation:
+The core requirement involves row-by-row aggregation. 
+A common "Logic Smell" here is the "Integer Division" bug, 
+where 'count / capacity' in Java truncates the decimal 
+before Math.ceil() can process it. Ensuring the cast to 
+(double), or using '(count + capacity - 1) / capacity', 
+eliminated this hidden bug right from the start.
+
+------------------------------------------------------------
+Step 2: Workspace Integration (task115 package)
+------------------------------------------------------------
+
+Prompt:
+Organize the Solution and Test files for a VS Code 
+environment under the task115 package.
+
+LLM Response:
+Added 'package task115;' to the source code and structured 
+the folder hierarchy to match the standard Java conventions
