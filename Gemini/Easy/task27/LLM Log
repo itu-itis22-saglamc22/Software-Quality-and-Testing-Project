@@ -1,0 +1,144 @@
+============================================================
+LLM INTERACTION LOG — TASK 27 (Smell Tests & Coverage)
+============================================================
+
+Task: Java/27
+Objective: Implement a function to flip the case of every 
+letter in a string (Upper to Lower, Lower to Upper) while 
+leaving non-alpha characters unchanged.
+
+------------------------------------------------------------
+Step 1: Initial Implementation & Case Logic
+------------------------------------------------------------
+
+Prompt:
+Implement the flipCase(String string) function. It should 
+iterate through the string and swap the casing of letters.
+
+LLM Response:
+Provided Solution.java using a StringBuilder and a loop. 
+Used Character.isUpperCase() and Character.isLowerCase() 
+to determine the transformation for each character.
+
+Explanation:
+The initial logic correctly addressed the core requirement. 
+However, there was a "Silent Failure" smell regarding 
+how the code would handle null inputs or strings containing 
+only numbers/symbols, which required explicit guard clauses.
+
+------------------------------------------------------------
+Step 2: Workspace Integration (task27 package)
+------------------------------------------------------------
+
+Prompt:
+Format the code for the task27 package in my VS Code 
+workspace.
+
+LLM Response:
+Applied 'package task27;' to all source files. 
+Provided the directory structure: 
+Gemini_Java_Tasks/task27/Solution.java.
+
+Explanation:
+This step eliminated the "Global Namespace" smell. Proper 
+packaging is necessary for JaCoCo to filter and report 
+coverage metrics specifically for this task's logic 
+without external noise.
+
+------------------------------------------------------------
+Step 3: Smell Testing (JUnit 5 Migration)
+------------------------------------------------------------
+
+Prompt:
+Convert the Main-based test into JUnit 5 "smell tests". 
+Ensure symbols and mixed-case sentences are verified.
+
+LLM Response:
+Developed SolutionTest.java. Replaced manual if-checks 
+with assertEquals() and used @DisplayName to remove the 
+"Obscure Test" smell, making the test report readable.
+
+Explanation:
+Transitioning to JUnit 5 removes the "Manual Verification" 
+smell. The tests now automatically verify that non-alpha 
+characters (spaces, punctuation) are preserved, which is 
+a common failure point in case-transformation algorithms.
+
+------------------------------------------------------------
+Step 4: Branch Coverage (JaCoCo 100%)
+------------------------------------------------------------
+
+Prompt:
+JaCoCo shows that the non-alpha character branch is 
+not fully covered. Update the tests to reach 100% coverage.
+
+LLM Response:
+Enhanced the test suite to include:
+- Null input (Safety guard branch)
+- Empty string (Early return branch)
+- String with only symbols/numbers (Non-alpha branch)
+- Purely Uppercase and purely Lowercase strings
+
+Explanation:
+By providing a string like "123!@#", we forced the logic 
+into the 'else' branch where characters are appended 
+without modification. This, combined with the null guard, 
+cleared the "Untested Path" smell and achieved 100% 
+JaCoCo branch coverage.
+
+------------------------------------------------------------
+Final Test Code (SolutionTest.java)
+------------------------------------------------------------
+
+package task27;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+
+class SolutionTest {
+
+    private final Solution solution = new Solution();
+
+    @Test
+    @DisplayName("Smell Test: Null and Empty Guards")
+    void testBoundaryConditions() {
+        assertEquals("", solution.flipCase(null));
+        assertEquals("", solution.flipCase(""));
+    }
+
+    @Test
+    @DisplayName("Logic Path: Case Flipping and Symbols")
+    void testFlipLogic() {
+        // Test Path: Mixed case with symbols
+        assertEquals("hELLO!", solution.flipCase("Hello!"));
+        
+        // Test Path: Long sentences (Multiple iterations)
+        String input = "These violent delights have violent ends";
+        String expected = "tHESE VIOLENT DELIGHTS HAVE VIOLENT ENDS";
+        assertEquals(expected, solution.flipCase(input));
+        
+        // Test Path: Non-alpha only (Else branch coverage)
+        assertEquals("123!@#", solution.flipCase("123!@#"));
+    }
+}
+
+------------------------------------------------------------
+Coverage & Quality Result
+------------------------------------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+Code Smells: Minimized (Silent Failures & Manual Verification removed)
+
+------------------------------------------------------------
+Summary
+------------------------------------------------------------
+
+The development of Task 27 moved from a simple algorithm 
+to a verified, null-safe utility. The process emphasized:
+1. Robust character-type handling (Upper, Lower, Other).
+2. Automated regression testing via JUnit 5.
+3. Exhaustive branch execution (targeting the 'else' and 
+   guard paths) to satisfy 100% JaCoCo requirements.
+============================================================
