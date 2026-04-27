@@ -7,7 +7,7 @@ class Solution {
      */
     public String fixSpaces(String text) {
         if (text == null || text.isEmpty()) {
-            return text;
+            return "";
         }
 
         StringBuilder sb = new StringBuilder();
