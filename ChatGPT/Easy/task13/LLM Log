@@ -1,0 +1,132 @@
+==============================
+LLM INTERACTION LOG — TASK13
+==============================
+
+Task: Java/13
+Objective: Compute the greatest common divisor (GCD) of two integers using a recursive approach.
+
+--------------------------------
+Step 1: Initial Test Conversion
+--------------------------------
+
+Prompt:
+Convert the main-based test into a proper JUnit test for the greatestCommonDivisor method.
+
+LLM Response:
+Provided a JUnit 5 test class using assertEquals for validating several GCD cases such as coprime numbers and common divisors.
+
+Explanation:
+The output was used as the initial test suite. It validated correctness of the recursive implementation for standard cases but did not yet ensure full branch coverage.
+
+--------------------------------
+Step 2: Identify Missing Branch Coverage
+--------------------------------
+
+Prompt:
+Improve branch coverage for the GCD function by adding necessary test cases.
+
+LLM Response:
+Suggested adding tests for:
+- cases where one of the inputs is zero
+- cases where both inputs are equal
+- cases covering both recursive branches (a > b and b > a)
+
+Explanation:
+The original tests covered general functionality but missed critical branches:
+- base condition when a == 0 or b == 0
+- equality condition (a == b)
+- both recursive paths (a > b and a < b)
+
+--------------------------------
+Step 3: Refine Tests for Full Coverage
+--------------------------------
+
+Prompt:
+Add missing edge cases and ensure all branches of the recursive logic are covered.
+
+LLM Response:
+Extended the test suite with:
+- zero input cases
+- equal number case
+- both recursive paths
+
+Explanation:
+The response was adopted and slightly structured to ensure:
+- All base cases are triggered
+- Recursive logic is fully exercised
+- Both comparison branches are covered
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task13;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void gcdOfCoprimeNumbersReturnsOne() {
+        assertEquals(1, solution.greatestCommonDivisor(3, 7));
+    }
+
+    @Test
+    void gcdOfMultiplesReturnsDivisor() {
+        assertEquals(5, solution.greatestCommonDivisor(10, 15));
+        assertEquals(7, solution.greatestCommonDivisor(49, 14));
+        assertEquals(12, solution.greatestCommonDivisor(144, 60));
+    }
+
+    @Test
+    void gcdWhenFirstNumberIsZeroReturnsSecond() {
+        assertEquals(7, solution.greatestCommonDivisor(0, 7));
+    }
+
+    @Test
+    void gcdWhenSecondNumberIsZeroReturnsFirst() {
+        assertEquals(9, solution.greatestCommonDivisor(9, 0));
+    }
+
+    @Test
+    void gcdOfEqualNumbersReturnsThatNumber() {
+        assertEquals(6, solution.greatestCommonDivisor(6, 6));
+    }
+
+    @Test
+    void gcdWhenFirstGreaterReturnsCorrectDivisor() {
+        assertEquals(4, solution.greatestCommonDivisor(20, 8));
+    }
+
+    @Test
+    void gcdWhenSecondGreaterReturnsCorrectDivisor() {
+        assertEquals(3, solution.greatestCommonDivisor(6, 21));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The initial test suite validated only common GCD scenarios. Through iterative refinement:
+- All base cases (zero and equality) were covered
+- Both recursive branches were exercised
+- Full branch coverage was achieved
+
+The LLM-assisted approach improved test completeness and ensured correctness across all logical paths of the recursive algorithm.
