@@ -1,24 +1,36 @@
 package task27;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
+class SolutionTest {
 
-        List<Boolean> correct = Arrays.asList(
-                Objects.equals(s.flipCase(""), ""),
-                Objects.equals(s.flipCase("Hello!"), "hELLO!"),
-                Objects.equals(s.flipCase("These violent delights have violent ends"),
-                        "tHESE VIOLENT DELIGHTS HAVE VIOLENT ENDS"));
+    @Test
+    @DisplayName("Should flip cases correctly for mixed strings")
+    void testFlipCase_Logic() {
+        Solution solution = new Solution();
+        
+        assertAll("Case Flipping",
+            () -> assertEquals("hELLO!", solution.flipCase("Hello!"), 
+                "Should flip letters and ignore punctuation"),
+            () -> assertEquals("aBC", solution.flipCase("Abc"), 
+                "Should handle simple mixed case"),
+            () -> assertEquals("tHESE VIOLENT DELIGHTS HAVE VIOLENT ENDS", 
+                solution.flipCase("These violent delights have violent ends"), 
+                "Should handle long sentences with spaces")
+        );
+    }
 
-        if (correct.contains(false)) {
-            int failedIndex = correct.indexOf(false);
-            throw new AssertionError("Test case at index " + failedIndex + " failed!");
-        } else {
-            System.out.println("Task 27: All tests passed successfully!");
-        }
+    @Test
+    @DisplayName("Should handle edge cases like empty, null, or non-alpha strings")
+    void testFlipCase_EdgeCases() {
+        Solution solution = new Solution();
+        
+        assertAll("Edge Cases",
+            () -> assertEquals("", solution.flipCase(""), "Empty string should return empty"),
+            () -> assertEquals("", solution.flipCase(null), "Null string should return empty"),
+            () -> assertEquals("123!@#", solution.flipCase("123!@#"), "Numeric/Symbol strings should remain unchanged")
+        );
     }
 }
