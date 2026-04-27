@@ -1,0 +1,151 @@
+============================================================
+LLM INTERACTION LOG — TASK 56 (Smell Tests & Coverage)
+============================================================
+
+Task: Java/56
+Objective: Determine if a string of brackets ("<" and ">") 
+is balanced. A sequence is balanced if every opener has a 
+closer and the balance never drops below zero.
+
+------------------------------------------------------------
+Step 1: Initial Implementation & Algorithm Design
+------------------------------------------------------------
+
+Prompt:
+Implement correctBracketing(String string). Use a counter-based 
+approach to track balance and ensure it returns false if 
+brackets are ever out of order.
+
+LLM Response:
+Provided Solution.java using an integer 'balance' variable. 
+The loop increments for '<' and decrements for '>'. If 
+balance becomes negative, it returns false immediately.
+
+Explanation:
+The algorithm correctly implements the stack-less balance 
+check. However, a common "Logic Smell" in such tasks is 
+ignoring the final balance state (e.g., returning true 
+for "<<>"). The implementation was checked to ensure the 
+final return statement is 'return balance == 0'.
+
+------------------------------------------------------------
+Step 2: Workspace Integration (task56 package)
+------------------------------------------------------------
+
+Prompt:
+Organize the Solution and Main files for a VS Code 
+environment under the task56 package.
+
+LLM Response:
+Added 'package task56;' and structured the folders. 
+Provided directory structure: task56/Solution.java.
+
+Explanation:
+This addressed the "Default Package" smell. Proper 
+packaging is vital for JaCoCo to isolate the coverage 
+metrics for this specific algorithmic task and to 
+maintain consistency across the semester project.
+
+------------------------------------------------------------
+Step 3: Smell Testing (JUnit 5 Migration)
+------------------------------------------------------------
+
+Prompt:
+Convert the Main-based test into JUnit 5 "smell tests". 
+Include multiple nested and unbalanced scenarios.
+
+LLM Response:
+Developed SolutionTest.java using JUnit 5. Replaced manual 
+System.out checks with assertTrue/assertFalse, eliminating 
+the "Manual Inspection" smell.
+
+Explanation:
+Transitioning to JUnit 5 removes the "Brittle Testing" 
+smell. The test suite now checks various permutations 
+of nested brackets, ensuring that complex strings like 
+"<><><<<><><>><>><<><><<>>>" are handled correctly 
+without manual effort.
+
+------------------------------------------------------------
+Step 4: Branch Coverage (JaCoCo 100%)
+------------------------------------------------------------
+
+Prompt:
+JaCoCo shows that the negative balance exit is not 
+fully covered. Update the tests to reach 100% coverage.
+
+LLM Response:
+Enhanced the test suite to include:
+- Null input (Safety guard branch)
+- Starting with a closing bracket (Immediate negative branch)
+- Ending with an open bracket (Non-zero final balance branch)
+- Empty string (Technically balanced branch)
+
+Explanation:
+By testing strings like "><<>" and "<<>", we exercised 
+both the early-exit 'if (balance < 0)' and the final 
+'balance == 0' check. This cleared the "Untested Logic" 
+smell and achieved 100% JaCoCo branch coverage.
+
+------------------------------------------------------------
+Final Test Code (SolutionTest.java)
+------------------------------------------------------------
+
+package task56;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+
+class SolutionTest {
+
+    private final Solution solution = new Solution();
+
+    @Test
+    @DisplayName("Smell Test: Null and Empty Guards")
+    void testBoundaryConditions() {
+        assertFalse(solution.correctBracketing(null));
+        assertTrue(solution.correctBracketing(""));
+    }
+
+    @Test
+    @DisplayName("Logic Path: Balanced and Nested Brackets")
+    void testBalancedLogic() {
+        assertTrue(solution.correctBracketing("<>"));
+        assertTrue(solution.correctBracketing("<<><>>"));
+        assertTrue(solution.correctBracketing("<><><<><>><>"));
+    }
+
+    @Test
+    @DisplayName("Logic Path: Unbalanced and Early Exits")
+    void testUnbalancedLogic() {
+        // Test Path: Early negative balance exit
+        assertFalse(solution.correctBracketing("><<>"));
+        assertFalse(solution.correctBracketing("<>>"));
+
+        // Test Path: Non-zero final balance
+        assertFalse(solution.correctBracketing("<<<<"));
+        assertFalse(solution.correctBracketing("<<>"));
+    }
+}
+
+------------------------------------------------------------
+Coverage & Quality Result
+------------------------------------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+Code Smells: Minimized (Manual Verification & Unhandled Exits removed)
+
+------------------------------------------------------------
+Summary
+------------------------------------------------------------
+
+The Task 56 implementation was moved from a basic concept 
+to a high-reliability bracket validator. The process 
+emphasized:
+1. Eliminating "Manual Inspection" smells via JUnit 5.
+2. Identifying and testing the "Early Exit" logic path.
+3. Achieving 100% branch coverage by validating both 
+   premature failures and final state balance checks.
+============================================================
