@@ -1,19 +1,35 @@
 package task18;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.howManyTimes("", "x") == 0,
-                s.howManyTimes("xyxyxyx", "x") == 4,
-                s.howManyTimes("cacacacac", "cac") == 4,
-                s.howManyTimes("john doe", "john") == 1);
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task18: All tests passed.");
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyStringContainsSubstringZeroTimes() {
+        assertEquals(0, solution.howManyTimes("", "x"));
+    }
+
+    @Test
+    void singleCharSubstringCountedCorrectly() {
+        assertEquals(4, solution.howManyTimes("xyxyxyx", "x"));
+    }
+
+    @Test
+    void overlappingSubstringCountedCorrectly() {
+        assertEquals(4, solution.howManyTimes("cacacacac", "cac"));
+    }
+
+    @Test
+    void nonOverlappingSubstringCountedOnce() {
+        assertEquals(1, solution.howManyTimes("john doe", "john"));
     }
 }
