@@ -1,0 +1,159 @@
+==============================
+LLM INTERACTION LOG — TASK32
+==============================
+
+Task: Java/32
+Objective: Evaluate a polynomial and find one zero/root using interval expansion and the bisection method.
+
+--------------------------------
+Step 1: Initial Implementation and Test Generation
+--------------------------------
+
+Prompt:
+Create a proper Solution.java and JUnit-compatible test file according to the provided Task32 prompt.
+
+The task includes:
+- poly(List<Double> xs, double x): evaluate a polynomial at x
+- findZero(List<Double> xs): find a root of the polynomial
+- given randomized test logic using Random(42)
+
+LLM Response:
+Provided a Solution.java implementation using:
+- polynomial evaluation with Math.pow
+- interval expansion from [-1, 1]
+- bisection method until the interval is sufficiently small
+
+Also provided an initial JUnit test version adapted from the original main-based randomized test.
+
+Explanation:
+The LLM output was used as the base implementation and test suite. The original manual test logic was converted into a JUnit-compatible format so it could be executed through Maven and measured by JaCoCo.
+
+--------------------------------
+Step 2: Improve Test Quality and Remove Test Smells
+--------------------------------
+
+Prompt:
+Improve the generated test file by reducing test smells and making the randomized test cleaner and more maintainable.
+
+LLM Response:
+Refactored the test code by:
+- introducing named constants for magic numbers
+- extracting coefficient generation into helper methods
+- using a fixed random seed for deterministic behavior
+- using assertAll to group generated test cases
+- extracting the residual assertion into a separate helper method
+
+Explanation:
+The response was used to improve readability and maintainability. Instead of having all randomized logic inside one large test method, the final test separates setup, data generation, and assertion logic.
+
+This reduces test smells such as:
+- magic numbers
+- long test method
+- unclear randomized behavior
+- repeated low-level coefficient generation logic
+
+--------------------------------
+Step 3: Improve Coverage and Robustness
+--------------------------------
+
+Prompt:
+Improve the test suite for branch coverage and reliable validation of polynomial roots.
+
+LLM Response:
+Suggested validating many generated polynomial coefficient sets and checking that the polynomial value at the returned root is close to zero within a tolerance.
+
+Explanation:
+The final test validates the numerical correctness of findZero over 100 deterministic generated cases. Since the random seed is fixed, the test remains reproducible while still exercising multiple polynomial structures and bisection paths.
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task32;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class SolutionTest {
+
+    private static final int RANDOM_SEED = 42;
+    private static final int GENERATED_CASE_COUNT = 100;
+    private static final int MAX_RANDOM_DEGREE_BUCKETS = 3;
+    private static final int EVEN_COEFFICIENT_COUNT_FACTOR = 2;
+    private static final int COEFFICIENT_RANGE = 20;
+    private static final int COEFFICIENT_OFFSET = 10;
+    private static final int ZERO_REPLACEMENT_COEFFICIENT = 1;
+    private static final double ROOT_RESIDUAL_TOLERANCE = 1e-4;
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void seededEvenDegreePolynomialsHaveNearZeroResidualAtFoundRoot() {
+        assertAll(generatedCoefficientSets().stream()
+                .map(coefficients -> (Executable) () -> assertRootResidualWithinTolerance(coefficients)));
+    }
+
+    private List<List<Double>> generatedCoefficientSets() {
+        Random random = new Random(RANDOM_SEED);
+        List<List<Double>> coefficientSets = new ArrayList<>();
+
+        for (int i = 0; i < GENERATED_CASE_COUNT; i++) {
+            coefficientSets.add(generatedCoefficients(random));
+        }
+
+        return coefficientSets;
+    }
+
+    private List<Double> generatedCoefficients(Random random) {
+        int coefficientCount = EVEN_COEFFICIENT_COUNT_FACTOR * (random.nextInt(MAX_RANDOM_DEGREE_BUCKETS) + 1);
+        List<Double> coefficients = new ArrayList<>();
+
+        for (int j = 0; j < coefficientCount; j++) {
+            coefficients.add((double) nonZeroCoefficient(random));
+        }
+
+        return coefficients;
+    }
+
+    private int nonZeroCoefficient(Random random) {
+        int coefficient = random.nextInt(COEFFICIENT_RANGE) - COEFFICIENT_OFFSET;
+        return coefficient == 0 ? ZERO_REPLACEMENT_COEFFICIENT : coefficient;
+    }
+
+    private void assertRootResidualWithinTolerance(List<Double> coefficients) {
+        double zero = solution.findZero(coefficients);
+        assertTrue(
+                Math.abs(solution.poly(coefficients, zero)) <= ROOT_RESIDUAL_TOLERANCE,
+                () -> "Residual exceeded tolerance for coefficients " + coefficients);
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The LLM-assisted workflow improved the test suite in three stages:
+- converted the original randomized main-based test into JUnit
+- refactored the test to reduce test smells
+- preserved deterministic randomized coverage using a fixed seed
+
+The final test suite is reproducible, maintainable, and suitable for JaCoCo coverage measurement.
