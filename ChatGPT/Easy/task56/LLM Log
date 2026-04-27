@@ -1,0 +1,160 @@
+==============================
+LLM INTERACTION LOG — TASK56
+==============================
+
+Task: Java/56
+Objective: Check whether a string of "<" and ">" brackets is correctly balanced.
+
+--------------------------------
+Step 1: Initial Test Conversion
+--------------------------------
+
+Prompt:
+Convert the main-based test into a proper JUnit test for the correctBracketing method.
+
+LLM Response:
+Provided a JUnit 5 test class using assertTrue and assertFalse for valid and invalid bracket sequences.
+
+Explanation:
+The output was used directly to replace manual testing with JUnit-based tests, enabling automated execution and compatibility with JaCoCo.
+
+--------------------------------
+Step 2: Identify Missing Coverage
+--------------------------------
+
+Prompt:
+Improve the test cases to ensure full branch coverage for bracket validation.
+
+LLM Response:
+Suggested adding:
+- valid simple bracket pair
+- valid nested bracket sequences
+- invalid sequence starting with closing bracket
+- invalid sequences with extra opening brackets
+- invalid sequences with extra closing brackets
+
+Explanation:
+The method depends on a depth counter. Full coverage requires testing:
+- depth increasing for "<"
+- depth decreasing for ">"
+- early return when depth becomes negative
+- final return when depth equals zero
+- final return when depth is not zero
+
+--------------------------------
+Step 3: Refine Tests for Full Coverage
+--------------------------------
+
+Prompt:
+Add valid, invalid, nested, and unbalanced bracket cases to cover every logical path.
+
+LLM Response:
+Finalized the test suite with multiple valid and invalid bracket patterns.
+
+Explanation:
+The final test suite ensures:
+- simple valid sequences are accepted
+- nested valid sequences are accepted
+- sequences with leading closing brackets fail immediately
+- sequences with remaining unmatched opening brackets fail at the final check
+- sequences with extra closing brackets fail when depth becomes negative
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task56;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void singlePairIsCorrect() {
+        assertTrue(solution.correctBracketing("<>"));
+    }
+
+    @Test
+    void nestedPairsAreCorrect() {
+        assertTrue(solution.correctBracketing("<<><>>"));
+    }
+
+    @Test
+    void sequenceOfNestedPairsIsCorrect() {
+        assertTrue(solution.correctBracketing("<><><<><>><>"));
+    }
+
+    @Test
+    void complexValidSequenceIsCorrect() {
+        assertTrue(solution.correctBracketing("<><><<<><><>><>><<><><<>>>"));
+    }
+
+    @Test
+    void extraClosingBracketMakesIncorrect() {
+        assertFalse(solution.correctBracketing("<<<><>>>>"));
+    }
+
+    @Test
+    void leadingClosingBracketMakesIncorrect() {
+        assertFalse(solution.correctBracketing("><<>"));
+    }
+
+    @Test
+    void singleOpeningBracketIsIncorrect() {
+        assertFalse(solution.correctBracketing("<"));
+    }
+
+    @Test
+    void onlyOpeningBracketsAreIncorrect() {
+        assertFalse(solution.correctBracketing("<<<<"));
+    }
+
+    @Test
+    void singleClosingBracketIsIncorrect() {
+        assertFalse(solution.correctBracketing(">"));
+    }
+
+    @Test
+    void unclosedOpeningBracketIsIncorrect() {
+        assertFalse(solution.correctBracketing("<<>"));
+    }
+
+    @Test
+    void unbalancedSequenceWithExtraOpenIsIncorrect() {
+        assertFalse(solution.correctBracketing("<><><<><>><>><<>"));
+    }
+
+    @Test
+    void unbalancedSequenceWithExtraCloseIsIncorrect() {
+        assertFalse(solution.correctBracketing("<><><<><>><>>><>"));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates all main bracket-balance paths:
+- valid simple bracketing
+- valid nested bracketing
+- invalid early closing bracket
+- invalid unmatched opening brackets
+- invalid extra closing brackets
+
+The LLM-assisted refinement improved the test suite by ensuring every conditional path of the depth-counter logic was exercised.
