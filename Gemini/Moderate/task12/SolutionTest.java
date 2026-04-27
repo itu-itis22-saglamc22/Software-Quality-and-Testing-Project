@@ -1,25 +1,41 @@
 package task12;
 
-import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import java.util.Arrays;
+import java.util.ArrayList;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
+class SolutionTest {
 
-        List<Boolean> correct = Arrays.asList(
-                s.longest(new ArrayList<>(List.of())).isEmpty(),
-                Objects.equals(s.longest(new ArrayList<>(Arrays.asList("x", "y", "z"))).get(), "x"),
-                Objects.equals(
-                        s.longest(new ArrayList<>(Arrays.asList("x", "yyy", "zzzz", "www", "kkkk", "abc"))).get(),
-                        "zzzz"),
-                Objects.equals(s.longest(new ArrayList<>(Arrays.asList("a", "b", "c"))).get(), "a"),
-                Objects.equals(s.longest(new ArrayList<>(Arrays.asList("a", "bb", "ccc"))).get(), "ccc"));
+    private final Solution solution = new Solution();
 
-        if (correct.contains(false)) {
-            int failedIndex = correct.indexOf(false);
-            throw new AssertionError("Test case at index " + failedIndex + " failed!");
-        } else {
-            System.out.println("Task 12: All tests passed successfully!");
-        }
+    @Test
+    @DisplayName("Smell Test: Guard clauses for null and empty lists")
+    void testBoundaryConditions() {
+        // Ensures the early-return branches are covered and prevents crashes
+        assertAll("Boundary Guard Tests",
+            () -> assertTrue(solution.longest(new ArrayList<>()).isEmpty(), "Empty list should return Optional.empty()"),
+            () -> assertTrue(solution.longest(null).isEmpty(), "Null list should be handled safely, returning Optional.empty()")
+        );
+    }
+
+    @Test
+    @DisplayName("Logic Path: List with a clear, unique maximum length")
+    void testUniqueMaximum() {
+        // Triggers the True path of the 'current > max' replacement branch
+        assertEquals("ccc", solution.longest(Arrays.asList("a", "bb", "ccc")).get());
+    }
+
+    @Test
+    @DisplayName("Logic Path: Tie-breaking logic (First occurrence wins)")
+    void testTieBreaking() {
+        // Triggers the False path of the 'current > max' replacement branch
+        
+        // "zzzz" and "kkkk" both have length 4. "zzzz" comes first and must be retained.
+        assertEquals("zzzz", solution.longest(Arrays.asList("x", "yyy", "zzzz", "www", "kkkk", "abc")).get());
+        
+        // All elements have length 1. The first element ("x") must be retained.
+        assertEquals("x", solution.longest(Arrays.asList("x", "y", "z")).get());
     }
 }
