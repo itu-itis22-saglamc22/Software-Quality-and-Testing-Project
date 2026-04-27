@@ -1,0 +1,146 @@
+============================================================
+LLM INTERACTION LOG — TASK 13 (Smell Tests & Coverage)
+============================================================
+
+Task: Java/13
+Objective: Return the longest string from a list of strings 
+using Java 8+ Optional. Return the first one if there are ties.
+
+------------------------------------------------------------
+Step 1: Initial Implementation & Optional API Selection
+------------------------------------------------------------
+
+Prompt:
+Implement the 'longest' function. It should return an 
+Optional<String> and handle empty lists gracefully.
+
+LLM Response:
+Provided Solution.java using a traditional loop and an 
+accumulator to track the longest string. Wrapped the 
+final result in Optional.ofNullable().
+
+Explanation:
+The use of Optional addresses the "Null Return" smell. 
+By returning an Optional instead of a null reference, 
+the API forces the caller to handle the case where the 
+list might be empty, improving overall system safety.
+
+------------------------------------------------------------
+Step 2: Workspace Configuration (task13 package)
+------------------------------------------------------------
+
+Prompt:
+Format the Solution and Main files for my VS Code 
+workspace under the task13 package.
+
+LLM Response:
+Applied 'package task13;' to all source files. 
+Provided the specific directory structure required 
+for the Java Extension Pack in VS Code to recognize 
+the project.
+
+Explanation:
+This step prevents the "Default Package" smell. 
+Organizing code into named packages is essential for 
+JaCoCo to generate accurate, scoped coverage reports 
+and for maintaining a professional repository structure.
+
+------------------------------------------------------------
+Step 3: Smell Testing (JUnit 5 Migration)
+------------------------------------------------------------
+
+Prompt:
+Replace the Main class with JUnit 5 "smell tests" 
+compatible with JaCoCo. Ensure Tie-breaking logic is tested.
+
+LLM Response:
+Created SolutionTest.java. Introduced tests for lists 
+with equal-length strings to verify the "First-Win" 
+requirement, eliminating the "Ambiguous Logic" smell.
+
+Explanation:
+Automated tests now verify the specific requirement that 
+the *first* longest string is returned during a tie. 
+This removes the "Incomplete Specification" smell that 
+often leads to bugs in collection processing.
+
+------------------------------------------------------------
+Step 4: Branch Coverage (JaCoCo 100%)
+------------------------------------------------------------
+
+Prompt:
+The coverage is currently partial. Fix the tests so that 
+JaCoCo shows 100% for the longest() method.
+
+LLM Response:
+Expanded the test suite to cover:
+- Null list input (Guard branch)
+- Empty list input (Guard branch)
+- List where the first element is the longest (Loop logic)
+- List where the last element is the longest (Loop logic)
+- List with ties (Greater-than vs Greater-than-equal branch)
+
+Explanation:
+By providing a list where a subsequent string has the 
+same length as the current longest, we specifically 
+test the "False" branch of the 'if (s.length() > longest.length())' 
+condition. This achieved the final 100% branch coverage.
+
+------------------------------------------------------------
+Final Test Code (SolutionTest.java)
+------------------------------------------------------------
+
+package task13;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import java.util.*;
+
+class SolutionTest {
+
+    private final Solution solution = new Solution();
+
+    @Test
+    @DisplayName("Smell Test: Empty and Null List Handling")
+    void testBoundaryConditions() {
+        // Covers the guard branches for empty/null inputs
+        assertTrue(solution.longest(null).isEmpty());
+        assertTrue(solution.longest(new ArrayList<>()).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Logic Path: Tie-breaking and Order")
+    void testLongestLogic() {
+        // Test Path: Standard longest
+        List<String> list1 = Arrays.asList("a", "bb", "ccc");
+        assertEquals("ccc", solution.longest(list1).get());
+
+        // Test Path: Tie-breaking (Ensures '>' branch is fully tested)
+        // If "peach" doesn't replace "apple", the '>' branch false path is covered.
+        List<String> list2 = Arrays.asList("apple", "peach", "grape");
+        assertEquals("apple", solution.longest(list2).get());
+    }
+}
+
+------------------------------------------------------------
+Coverage & Quality Result
+------------------------------------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+Code Smells: Minimized (Manual Checking & Ambiguous Tie-breaks removed)
+
+------------------------------------------------------------
+Summary
+------------------------------------------------------------
+
+The Task 13 implementation successfully transitioned from 
+a basic loop to a robust, Optional-based utility. 
+Key improvements included:
+1. Handling the "Missing Data" smell via Optional.
+2. Resolving "Logic Branch" smells by testing tie-break 
+   scenarios (Equal length strings).
+3. Ensuring 100% JaCoCo coverage by exercising both the 
+   true and false paths of the length comparison.
+============================================================
