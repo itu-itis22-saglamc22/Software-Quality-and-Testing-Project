@@ -1,0 +1,459 @@
+\documentclass[journal]{IEEEtran}
+
+% -------------------- Packages --------------------
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+
+% -------------------- Title --------------------
+\title{Evaluation of LLM-Based Java Code and Test Generation Using the HumanEval Dataset}
+
+% -------------------- Authors --------------------
+\author{
+Cemalcan~Sağlam~(150220721), 
+Ayham~Alhasan~(150230914), 
+and~Najib~Attar~(150220905)%
+\thanks{Department of Computer Engineering, Istanbul Technical University.}
+\thanks{BLG 475E Software Quality and Testing Project, Spring 2025--2026.}
+}
+
+% -------------------- Header --------------------
+\markboth{BLG 475E Software Quality and Testing Project, Spring 2025--2026}%
+{Student et al.: LLM-Based Java Code and Test Generation}
+
+\maketitle
+
+% -------------------- Abstract --------------------
+\begin{abstract}
+This report presents the Phase 1 work of the BLG 475E Software Quality and Testing project. The aim of the study was to compare ChatGPT GPT-5.4 and Gemini in Java code generation and test generation using selected prompts from the Java HumanEval dataset. Thirty prompts were chosen and grouped into easy, moderate, and hard categories to make the comparison more balanced.
+
+The generated solutions were tested using JUnit 5 and Maven, while JaCoCo was used for branch coverage analysis. In addition to the automated tests, the test cases were reviewed through test smell analysis and manual black-box testing methods such as equivalence class partitioning and boundary value analysis. The results showed that ChatGPT GPT-5.4 performed better in the initial correctness check, but both models improved after test feedback and refactoring. The study also showed that passing the base tests alone is not enough, since some edge cases and branches can still remain uncovered without further test improvement.
+\end{abstract}
+
+% -------------------- Keywords --------------------
+\begin{IEEEkeywords}
+Large Language Models, Software Testing, Code Generation, Unit Testing, HumanEval, Java, JUnit, Branch Coverage.
+\end{IEEEkeywords}
+
+% -------------------- Main Sections --------------------
+
+\section{Introduction}
+% Introduce the project topic.
+% Explain why LLM-based code generation needs testing.
+% State the aim of Phase 1.
+LLMs are now widely used to help with programming tasks. A user describes a problem in plain language, and the model generates code that tries to solve it. This saves time, especially for small tasks or quick prototypes. However, generated code should not be accepted without testing. Even if it looks correct at first, it may still fail on special inputs, boundary cases, or situations the prompt did not clearly cover.
+
+This project looks at LLM-based code generation from a software testing point of view. The main focus is not just whether an LLM can write Java code, but how reliable that code actually is. For this purpose, selected problems from the Java version of the HumanEval dataset are used, since each one describes a clear programming task that can be tested and compared in a systematic way.
+
+In Phase 1, two LLMs generate Java solutions for the selected prompts. The same prompts are given to both models to keep the comparison fair. After generating the code, solutions are tested with the base tests from the dataset. Then the tests are examined more carefully using branch coverage analysis, test smell analysis, and manual black-box testing methods, where equivalence class partitioning and boundary value analysis are used to check whether important input cases are covered or missed.
+
+The report discusses how the prompts were selected, how the LLMs were used, how the generated code behaved during testing, and how the tests were improved. The comparison focuses on common mistakes, failed cases, coverage results, and the overall effectiveness of the generated tests.
+
+
+\section{Dataset and Tools}
+This project uses the Java version of the HumanEval dataset as the main source of programming tasks. The dataset contains small programming problems written as natural language descriptions, where each prompt explains the expected behavior of a method and the LLM generates a Java solution based on it. 
+
+The project was implemented using Java 17, JUnit 5, Maven, and JaCoCo tools. JUnit 5 was used for writing and running unit tests. Maven ran the test suite with the command mvn test, making the process repeatable iteratively continuesly. JaCoCo was used for branch coverage analysis, to identify which branches were covered and which still needed additional test cases. The development environment was Visual Studio Code with the Extension Pack for Java.
+
+\subsection{HumanEval Java Dataset}
+Thirty prompts were selected from the dataset and grouped as easy, moderate, and hard. The prompts cover different types of tasks like string handling, numerical operations, list processing, and conditional logic to cover all possible potential errors. This variety was important because testing only one type of problem would not give a complete picture of how each model performs, and the errors would not be covered thoroughly.
+
+Each prompt was given to both LLMs using the same original description. No extra hints were added and the prompt meaning was not changed. The generated code was also not manually corrected before the first test execution, so the initial results reflect the direct output of each model.
+
+\subsection{Development and Testing Environment}
+
+The project was developed using Java 17 and JUnit 5. Each generated solution has a related test file, and these tests were executed to check whether the solution behaves as expected. Maven made the testing process more organized, where the same command could be used after adding or changing test cases. JaCoCo was used because some generated solutions may pass the base tests while still having untested decision paths, for example where only one side of an if statement is ever tested. Overall, Java 17, JUnit 5, Maven, JaCoCo, and VS Code gave a simple but complete setup for generating, testing, and analyzing the LLM-produced code.
+
+Maven was used to run the tests with the command \texttt{mvn test}. This made the testing process more organized because the same command could be used after adding or changing test cases. Instead of running each test manually, Maven provided a repeatable way to execute the test suite and check whether the project still passed.
+
+For branch coverage analysis, JaCoCo was used. Branch coverage was important because some generated solutions may pass the base tests while still having untested decision paths. For example, a method may contain an \texttt{if} statement where only one side of the condition is tested. JaCoCo helped identify these missing branches, and this information was later used to improve the test cases.
+
+The main development environment was Visual Studio Code with the Extension Pack for Java. This environment was used to edit the Java files, manage the project structure, and run the Maven-based testing workflow. Overall, the combination of Java 17, JUnit 5, Maven, JaCoCo, and VS Code gave us a simple but complete setup for generating, testing, and analyzing the LLM-produced code.
+
+
+\subsection{Repository Organization}
+% Describe the GitHub repository structure and where logs, code, and tests are stored.
+
+
+\section{LLM Selection and Experimental Approach}
+% Explain which two LLMs were selected and why.
+% Explain whether the workflow is semi-agentic or agentic.
+
+Two LLMs were used to generate Java code and test cases for the selected HumanEval prompts. The idea was to give the same tasks to both models and compare their outputs, not only to check whether the generated code worked, but also to see how each model handled similar problems, where it made mistakes, and how useful its tests were.
+
+
+\subsection{Selected LLMs}
+% Explain the reason for selecting LLM 1 and LLM 2.
+The two selected models were ChatGPT GPT-5.4 and Gemini 3.1 Pro Preview. Both are accessible and capable of understanding a problem statement, writing Java code, and generating unit tests. Since the project required many prompts to be tested, it was important to use models that were practical to work with throughout the whole process. Using two different models made the comparison more meaningful, where differences in code correctness, test quality, and error types could be observed for the same prompts.
+
+\subsection{Agentic or Semi-Agentic Workflow}
+% Describe how prompts, code generation, testing, feedback, and correction were handled.
+The project followed a semi-agentic workflow. The LLMs were used as assistants, but the group managed each step manually. A prompt was given to the model, the generated output was added to the project files, and the results were checked by the group. This workflow was preferred because it made the process easier to control and log. A fully agentic workflow could automate some steps, but it would make it harder to track what happened at each stage, in addition to the ai inclination to slipping into unproductive error loops. When a solution failed or coverage was insufficient, this information was used to prepare a new prompt, these decisions were always made by the group.
+
+\section{Prompt Selection and Difficulty Classification}
+% Explain how the 30 prompts were selected.
+% Explain how they were classified as easy, moderate, or hard.
+Thirty prompts were selected from the Java HumanEval dataset and grouped into three difficulty levels: easy, moderate, and hard. The classification was based on the type of logic required, the number of conditions involved, and how likely the task was to produce edge cases or implementation mistakes. There was no strict scoring rule; it was a judgment based on reading each task carefully.
+
+The goal was to avoid selecting prompts all from the same category. Some tasks focus on strings, some on numerical operations, some on lists, and others on nested structures or algorithmic logic. This variety was important because an LLM may handle simple arithmetic well but struggle with tasks requiring careful state tracking or nested conditions. Many of the selected prompts also include natural boundary cases such as empty strings, short lists, or threshold values, which made them useful for evaluating test quality as well.
+
+\subsection{Selection Criteria}
+% Explain prompt diversity, problem types, edge cases, and testing value.
+Easy prompts involved direct logic, simple loops, or clear mathematical behavior. Moderate prompts required more careful implementation, usually involving several conditions, state tracking, or string manipulation. Hard prompts required more advanced reasoning, involving numerical methods, grid processing, hashing, or external library usage. These were expected to be more challenging and more useful for observing differences between the two models.
+
+\subsection{Difficulty Classification}
+% Add a table later listing the 30 selected prompts and their difficulty levels.
+Table I shows the selected prompts, their difficulty levels, and the reason each was included. The same thirty prompts were used for both LLMs, since the comparison would not be fair otherwise. The difficulty classification was also reflected in the repository structure, where solutions and tests were organized under easy, moderate, and hard folders.
+
+\begin{table*}[!t]
+\renewcommand{\arraystretch}{1.2}
+\caption{Selected HumanEval Prompts and Difficulty Classification}
+\label{tab:selected-prompts}
+\centering
+\footnotesize
+\begin{tabular}{p{0.10\textwidth}p{0.07\textwidth}p{0.20\textwidth}p{0.56\textwidth}}
+\toprule
+\textbf{Difficulty} & \textbf{Task ID} & \textbf{Prompt Name} & \textbf{Selection Rationale and Technical Characteristics} \\
+\midrule
+
+Easy & 0 & \texttt{has\_close\_elements} & Focuses on basic iterative comparison and threshold-based conditional logic. \\
+Easy & 3 & \texttt{below\_zero} & Evaluates sequential data processing and simple state tracking within a collection. \\
+Easy & 11 & \texttt{string\_xor} & Tests character-level manipulation and basic bitwise logic implementation. \\
+Easy & 13 & \texttt{greatest\_common\_divisor} & Involves a standard mathematical algorithm with clear boundary conditions. \\
+Easy & 14 & \texttt{all\_prefixes} & Assesses string slicing and basic memory allocation for collection results. \\
+Easy & 18 & \texttt{how\_many\_times} & Evaluates substring pattern matching and basic frequency counting. \\
+Easy & 23 & \texttt{strlen} & Validates simple measurement logic and handling of basic data types. \\
+Easy & 27 & \texttt{flip\_case} & Tests conditional character transformation and case-sensitivity logic. \\
+Easy & 56 & \texttt{correct\_brackets} & Focuses on linear balancing logic and simple stack-based simulation. \\
+Easy & 131 & \texttt{digits} & Evaluates numeric decomposition and basic arithmetic accumulation. \\
+
+\midrule
+
+Moderate & 1 & \texttt{separate\_paren\_groups} & Involves management of nested structures and more complex string partitioning. \\
+Moderate & 6 & \texttt{parse\_nested\_parens} & Tests depth-tracking logic and nested conditional branches. \\
+Moderate & 8 & \texttt{sum\_product} & Evaluates the ability to maintain and update multiple states at the same time. \\
+Moderate & 9 & \texttt{rolling\_max} & Tests dynamic accumulation and tracking of state changes over time. \\
+Moderate & 10 & \texttt{make\_palindrome} & Requires string construction and careful handling of symmetry. \\
+Moderate & 12 & \texttt{longest\_string} & Focuses on iterative comparison logic across variable-length data. \\
+Moderate & 33 & \texttt{sort\_third} & Evaluates index-specific filtering and sorting logic. \\
+Moderate & 37 & \texttt{sort\_even} & Tests parity-based selection combined with sorting. \\
+Moderate & 81 & \texttt{numerical\_grades} & Includes many decision paths, making it useful for branch coverage analysis. \\
+Moderate & 93 & \texttt{encode} & Involves mapping logic and multi-step character transformation. \\
+Moderate & 110 & \texttt{exchange} & Assesses boolean logic across more than one collection. \\
+Moderate & 122 & \texttt{add\_elements} & Tests compound conditions based on value and digit count. \\
+Moderate & 143 & \texttt{words\_sum} & Combines string parsing with an additional algorithmic check. \\
+Moderate & 163 & \texttt{generate\_integers} & Focuses on range-based processing and parity filtering. \\
+
+\midrule
+
+Hard & 32 & \texttt{find\_zero} & Requires numerical-method style reasoning and polynomial-related logic. \\
+Hard & 111 & \texttt{histogram} & Involves frequency mapping and multi-criterion output selection. \\
+Hard & 115 & \texttt{max\_fill} & Features matrix manipulation and capacity-related constraints. \\
+Hard & 129 & \texttt{min\_path} & Requires pathfinding logic in a grid, such as BFS or dynamic programming. \\
+Hard & 140 & \texttt{fix\_spaces} & Tests complex string formatting rules and pattern-like behavior. \\
+Hard & 162 & \texttt{string\_to\_md5} & Requires external library usage and standard hashing behavior. \\
+
+\bottomrule
+\end{tabular}
+\end{table*}
+
+
+\section{Code Generation Process}
+% Explain how each LLM generated Java code for the selected prompts.
+% State that the original prompt descriptions were used without modification.
+% State that the initial generated code was not manually changed.
+After selecting the thirty prompts, Java solutions were generated using both LLMs. The same prompt set was used for both models, and the generated solutions were saved separately by model name, difficulty level, and task number.
+
+The original task descriptions were used without modification, and no extra hints were added. The generated code was not manually corrected before the first test execution. Even if a solution looked correct, it was still treated as the initial LLM output and tested with JUnit. This separation was important because the goal was to evaluate the models through actual test execution, not by reading the code.
+
+\subsection{Prompting Procedure}
+% Describe the exact procedure used to send prompts to the LLMs.
+For each task, the description was given to the LLM and a Java implementation was requested. The same procedure was repeated for both models. All LLM interactions were recorded in log files, where each log includes the prompt, the response, and a short note explaining how the output was used. These logs are stored in the repository. After each response, the generated code was copied into the related task folder. If a test later failed, the failure was handled in a later step rather than changing the initial output immediately.
+
+\subsection{Generated Code Organization}
+% Explain how generated code files were named and stored.
+The generated code was organized by model, difficulty level, and task number. The repository contains separate folders for ChatGPT and Gemini, where tasks are grouped as easy, moderate, and hard inside each. Each task folder contains the Java solution and its related test file. This structure made it easier to compare the two models on the same task and to prepare result tables for correctness, failed cases, and coverage.
+
+\section{Base Test Execution}
+
+After the Java solutions were generated, the next step was to run the base tests for the selected HumanEval tasks. This step gave us the first indication of whether the generated code was working correctly or not. At this point, the aim was not to improve the code or change the tests, but only to check the first version of each LLM output.
+
+The generated code was not manually changed before running the base tests. This was important because the first test result should reflect the direct output of each model. If the code had been edited before testing, the comparison between ChatGPT GPT-5.4 and Gemini would not be fair.
+
+\subsection{Base Test Setup}
+
+The base tests were written as JUnit 5 test files and executed using Maven with the command \texttt{mvn test}. The same testing setup was used for both models. A task was counted as passed if the generated solution compiled successfully and passed all related base tests. If the solution had a compilation problem, runtime error, wrong output, or failing assertion, it was counted as failed.
+
+\subsection{Initial Pass/Fail Results}
+
+The initial test results showed that ChatGPT GPT-5.4 passed 28 out of the 30 selected tasks, while Gemini passed 25 out of 30 tasks. This means that both models were able to solve most of the selected prompts, but ChatGPT GPT-5.4 had a higher pass rate in the base test stage.
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.2}
+\caption{Initial Base Test Execution Summary}
+\label{tab:base-test-summary}
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{LLM} & \textbf{Passed Tasks} & \textbf{Failed Tasks} & \textbf{Success Rate} \\
+\midrule
+ChatGPT GPT-5.4 & 28 & 2 & 93.33\% \\
+Gemini & 25 & 5 & 83.33\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These results show that the base tests were useful as an initial correctness check. However, passing the base tests does not mean that the generated solutions are fully correct. The base tests may not cover all boundary cases, special inputs, or branches inside the code. Because of this, the next step was to improve the tests using branch coverage analysis and test smell checking.
+
+\subsection{Observed Failure Types}
+
+The failed tasks were treated as signs of possible implementation errors, missed edge cases, or misunderstanding of the prompt. ChatGPT GPT-5.4 had fewer failed tasks than Gemini, so it performed better in the initial base test run.
+
+However, passing the base tests does not prove that the generated code is fully correct. Some boundary cases or uncovered branches may still be missing, so further test improvement was still needed.
+
+\section{Test Improvement}
+
+After running the base tests, the test files were improved to make the evaluation stronger. The base tests were useful as a first check, but they were not enough by themselves. Some solutions can pass the first tests while still missing boundary cases or branches that were never executed. Because of this, the improvement step focused on both test quality and branch coverage.
+
+\subsection{Test Smell Analysis}
+
+Test smell analysis was used to review the test files from a quality point of view. The goal was not only to make the tests pass, but also to make sure that they were clear, useful, and able to check the expected behavior properly. During this step, the tests were checked for issues such as repeated checks, unclear test names, weak assertions, and missing edge cases.
+
+When these issues were noticed, the test files were improved without changing the original purpose of the task. Some test cases were separated to make them easier to understand, and some additional inputs were added when the existing tests did not cover important situations. This made the tests more readable and also more helpful for finding mistakes in the generated solutions.
+
+\subsection{Branch Coverage Analysis}
+
+Branch coverage analysis was performed using JaCoCo. This step helped us see whether the tests executed the important decision paths inside the generated code. For example, if a method had an \texttt{if} statement, the tests should ideally cover both sides of the condition. If only one side was tested, the branch coverage result showed that the test set still needed improvement.
+
+For the checked ChatGPT GPT-5.4 samples, the average branch coverage increased from 80.6\% to 100\% after adding new test cases. The Gemini samples showed a similar improvement, increasing from approximately 77\% to around 100\%. These results show that the added tests were useful, especially for tasks that had conditional logic or more than one possible execution path.
+
+The coverage results also showed why the improvement step was needed. Passing the base tests did not always mean that all branches were tested. After checking the uncovered parts, extra tests were added to force the code to go through missing paths. This made the test suite stronger than the initial version.
+
+\subsection{Improved Test Cases}
+
+The improved test cases mainly targeted inputs that were missing from the first test files. These included empty inputs, short strings, repeated values, boundary values, special characters, and cases that trigger different branches in the code. The exact added cases depended on the behavior of each HumanEval task.
+
+For string-based tasks, extra tests were usually added for empty strings, repeated substrings, mixed uppercase and lowercase characters, and unusual formatting cases. For numeric and list-based tasks, extra tests were added for small collections, threshold values, negative values, and cases where the expected result changes at a boundary.
+
+Overall, the improved tests gave a better evaluation than the base tests alone. They helped cover more branches, made the test files clearer, and reduced the chance that a generated solution would look correct only because the original tests were too limited.
+
+\section{Manual Test Assessment}
+
+Besides running the automated JUnit tests, we also checked some test cases manually. The reason for doing this was simple: a test suite can pass, but still miss important input cases. Because of that, we looked at the task descriptions and tried to think about the kinds of inputs that should be tested, especially edge cases.
+
+\subsection{Equivalence Class Partitioning}
+
+Equivalence class partitioning was used to group similar inputs together. For example, for string tasks, the input classes can include empty strings, normal strings, repeated patterns, and mixed uppercase/lowercase strings. For list tasks, the input classes can include empty lists, one-element lists, normal lists, and lists with negative values. This helped us check whether the tests were only covering normal inputs or also covering less obvious cases.
+
+Table~\ref{tab:manual-tests} shows ten representative manual test cases. Five of them were selected for ChatGPT outputs and five for Gemini outputs. These tests were chosen because they cover cases that are easy to miss during normal test generation.
+
+\begin{table*}[!t]
+\renewcommand{\arraystretch}{1.2}
+\caption{Representative Manual Test Cases}
+\label{tab:manual-tests}
+\centering
+\footnotesize
+\begin{tabular}{p{0.10\textwidth}p{0.10\textwidth}p{0.20\textwidth}p{0.18\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Model} & \textbf{Task} & \textbf{Input} & \textbf{Expected Output} & \textbf{Reason for Test} \\
+\midrule
+
+ChatGPT & \texttt{task0} & \texttt{[1.0, 1.5], threshold = 0.5} & \texttt{false} & Checks the exact threshold boundary. \\
+ChatGPT & \texttt{task11} & \texttt{1010, 1100} & \texttt{0110} & Checks normal character-by-character XOR behavior. \\
+ChatGPT & \texttt{task18} & \texttt{string = aaaa, substring = aa} & \texttt{3} & Checks overlapping substring matches. \\
+ChatGPT & \texttt{task23} & empty string & \texttt{0} & Checks the smallest possible string input. \\
+ChatGPT & \texttt{task27} & \texttt{AbC123!} & \texttt{aBc123!} & Checks letters, digits, and symbols together. \\
+
+\midrule
+
+Gemini & \texttt{task3} & \texttt{[1, -1]} & \texttt{false} & Checks that reaching zero is not counted as going below zero. \\
+Gemini & \texttt{task8} & empty list & \texttt{[0, 1]} & Checks the empty-list case for sum and product. \\
+Gemini & \texttt{task9} & \texttt{[-3, -2, -5]} & \texttt{[-3, -2, -2]} & Checks rolling maximum behavior with negative values. \\
+Gemini & \texttt{task13} & \texttt{a = 0, b = 5} & \texttt{5} & Checks a zero boundary case for GCD. \\
+Gemini & \texttt{task131} & \texttt{2468} & \texttt{0} & Checks a number with no odd digits. \\
+
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Boundary Value Analysis}
+
+Boundary value analysis was used because many mistakes happen near the limits of a condition. In our selected tasks, these limits included empty strings, empty lists, zero values, exact threshold values, and very small inputs. These cases are important because generated code may work for normal examples but still fail when the input is close to a boundary.
+
+For example, in \texttt{task0}, the case where the distance is exactly equal to the threshold is important. In \texttt{task23}, the empty string checks the lower boundary of string length. In \texttt{task13}, using zero in the GCD input checks whether the solution handles a common mathematical edge case correctly.
+
+\subsection{Assessment of Base Test Effectiveness}
+
+The base tests were useful as a first check, but they were not enough to fully judge the generated solutions. They mostly helped confirm that the main behavior of each task was implemented correctly. However, after reviewing the tasks manually, we found that some additional cases were still useful, especially boundary cases and inputs that are less common.
+
+Because of this, the base tests were treated as a starting point rather than a complete test suite. Manual assessment helped us see what kinds of inputs could still be missing, such as overlapping substrings, empty inputs, negative numbers, and exact boundary values.
+
+\subsection{Additional Tests Based on Input Mutations}
+
+Some extra tests were created by changing the inputs of existing tests. For example, a normal string was changed into an empty string, a normal substring case was changed into an overlapping substring case, and positive numerical inputs were changed into zero or negative values. These changes kept the same task behavior, but made the tests stronger.
+
+This mutation-based idea helped us check whether the generated solutions were only correct for common examples or whether they could also handle edge cases. In this way, the manual assessment supported the automated testing and coverage analysis steps.
+
+\section{Refactoring of Failed Solutions}
+
+After the first test run, the failed solutions were reviewed instead of being ignored or fixed without explanation. The main idea was to understand why the solution failed and then use that information to guide the next prompt. In this step, the LLM was not asked to simply generate everything again from zero. Instead, it was given the task description together with the observed problem, such as a failing test case, wrong output, or missing branch.
+
+This step was useful because the first generated answer was not always enough. Some solutions looked correct at first, but failed when they were tested more carefully. By giving the model more specific feedback, the corrected version usually became closer to the expected behavior.
+
+\subsection{Refactoring Prompt Strategy}
+
+The refactoring prompts were more detailed than the first code generation prompts. In the first step, the model mainly received the original HumanEval description. In the refactoring step, the prompt also included the generated code and the problem found during testing. When the issue was related to coverage, the prompt explained which kind of case was missing from the tests.
+
+A typical correction prompt included three parts: the original task description, the current code or test file, and the error or missing case that needed to be fixed. The model was also asked to keep the same method signature and not change the intended behavior of the task. This helped keep the correction focused instead of producing a completely different solution.
+
+\subsection{Before and After Refactoring Results}
+
+Before refactoring, ChatGPT GPT-5.4 passed 28 out of 30 tasks, while Gemini passed 25 out of 30 tasks in the initial base test execution. After the failed cases were reviewed and corrected, the tests were run again. The corrected versions improved the final result for both models.
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.2}
+\caption{Before and After Refactoring Summary}
+\label{tab:refactoring-summary}
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{LLM} & \textbf{Before Refactoring} & \textbf{After Refactoring} \\
+\midrule
+ChatGPT GPT-5.4 & 28/30 passed & 30/30 passed \\
+Gemini & 25/30 passed & 30/30 passed \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This shows that the feedback step was helpful. The first LLM outputs were not always correct, but the models improved when they were given clear information about what went wrong. The test results and coverage feedback made the correction process more focused, because the model was guided toward the specific problem instead of being asked to rewrite the whole solution blindly.
+
+\section{Literature Review}
+% Summarize 5 recent papers about LLM-based test generation.
+% Do not use LLM-generated text directly for this section.
+
+ChatUniTest~\cite{chatunitest} is a tool designed to integrate LLM generation capabilities with technology of code testing, addressing issues such as limited LLM context windows which reflect in the results as non-comprehensive test sets, and the inconsistency and incorrectness of produced test sets, as the authors note that LLMs frequently produce test cases containing compilation failures and incorrect runtime assertions. The proposed solution is an adaptive focal context generation mechanism combined with a generation-validation-repair pipeline, which aims to address the issue of incorrect produced test cases. The process begins with a parsing step where raw information is extracted to initialize and optimize the generation phase, after which the construction of the prompt is based on adaptive focal context generation and chain-of-thought scheme. Then the analysis step is conducted to transform static test cases into dynamic deeper and more revealing cases, followed by syntactic validation and compile validation to check syntactic correctness and examine semantic issues respectively. The authors report that ChatUniTest outperforms EvoSuite and TestSpark in overall line coverage across multiple Java projects. This framework is directly relevant to the present study, as a comparable generate-validate-repair workflow is applied when producing JUnit test cases using LLM agents, and the same categories of errors identified by the authors are expected to be encountered and analyzed during our evaluation.
+
+Alshahwan et al.~\cite{testgenllm} present TestGen-LLM, a tool developed at Meta that uses LLMs to improve already existing human-written test suites rather than generating tests from scratch. The tool addresses issues such as LLM hallucination and non-determinism, which reflect in the results as test cases that either fail to compile or break existing behavior. The proposed solution is an Assured LLM-based Software Engineering pipeline, which aims to filter the generated test cases through correctness and coverage checks to ensure only improved tests are kept, meaning that better tests are mutated. This tool was deployed across Instagram and Facebook platforms, where multiple LLMs were used to maximize coverage gains using this mechanism. The results show that 75\% of generated test cases compiled successfully, 57\% passed reliably, and 25\% increased coverage, where 73\% of the recommendations were accepted by Meta engineers for production deployment. This work is directly relevant to the present study, as the filtering and validation strategy employed by TestGen-LLM is comparable to the test improvement phase in this project, where branch coverage analysis is used to iteratively refine LLM-generated JUnit 5 test cases for HumanEval prompts across two LLM agents.
+
+Pizzorno and Berger~\cite{coverup} present CoverUp, a coverage-guided LLM-based test generation tool, it addresses the limitation of existing approaches where generated test suites fail to achieve comprehensive branch and line coverage. The authors identify that LLMs when prompted without coverage feedback tend to produce test cases that cluster around obvious execution paths, since LLMs are statistical averagers in their cores, leaving large portions of the code intricacies untested. The proposed solution is an iterative feedback loop where coverage measurement results are fed back into the LLM prompt iteratively, which aims to guide the model to generate tests specifically targeting uncovered lines and branches, and this process tends to converge to the uncovered cases. The process begins with an initial test generation step, where a coverage analysis tool measures what remains uncovered, and this information is then embedded into the next prompt to direct the LLM toward the gaps. On the other hand the authors evaluate CoverUp against CodaMosa and MuTAP across a benchmark of open-source Python projects using GPT-4o, where results show a median line and branch coverage of 80\% compared to 47\% achieved by CodaMosa. This work is directly relevant to the present study, as the same principle of using branch coverage analysis as a feedback mechanism is applied in this project, where coverage results are used to guide iterative test refinement for HumanEval prompts across two LLM agents using JUnit 5.
+
+Chu et al.~\cite{chusurvey} conduct a literature review of 115 publications on LLM-based unit test generation, resembling a thorough meta-study on the role of LLMs in testing, it addresses the lack of a structured and comprehensive view of the field by proposing a classification based on the unit test generation lifecycle. The authors identify that traditional methods often lack the semantic understanding required to produce realistic test inputs that suit the context with wide coverage, where LLMs tend to address this limitation since they are trained on vast amounts of code and have the ability to recognize programming patterns and semantics effectively. The review reveals that prompt engineering has emerged as the most widely viable approach and accounts for 89\% of the studies, since it is the option with the most flexibility without requiring model retraining or fine-tuning. The authors also find that iterative validation and repair loops have become the standard mechanism to ensure usability, increasing success rates significantly. On the other hand, challenges remain regarding weak fault detection capabilities of generated tests and the lack of standardized evaluation benchmarks across the field. This work is relevant to the present study, as the challenges and patterns identified by the authors serve as a reference framework for comparing and evaluating the outputs of the LLM agents generating test cases for HumanEval prompts, and the weak fault detection limitation discussed in the review is expected to be observed and analyzed during our mutation testing phase.
+
+Foster et al.~\cite{ach} present ACH (Automated Compliance Hardening), a mutation-guided LLM-based test generation system developed and deployed at Meta, it addresses the limitation of traditional mutation testing where pre-defined rule-based mutation operators tend to generate unrealistic faults that do not reflect real world concerns. The authors identify that traditional mutation testing has always struggled with scalability, where the number of generated mutants and the effort required to kill them made industrial deployment infeasible, and since LLMs are statistical engines that do not rely on rigid rules to make decisions, they are proposed as the solution to both sides of this problem as they can generate realistic targeted mutants and the tests to catch them at the same time. The system works by taking a plain text description of a fault concern, where ACH uses it to generate specific mutants that are currently undetected, and then generates tests that are guaranteed to kill those mutants, hardening the platform against future regressions in the process. The system was deployed across 10,795 Android Kotlin classes in 7 software platforms at Meta, from which it generated 9,095 mutants and 571 hardening test cases, where engineers accepted 73\% of the generated tests during Messenger and WhatsApp test-a-thons. This work is directly relevant to the present study, as the mutation-guided approach adopted by ACH serves as a conceptual reference for the mutation testing phase in this project, where LLM agents are evaluated on their ability to generate fault-detecting tests for HumanEval Java prompts across LLMs.
+
+\section{Results and Discussion}
+
+This section brings together the main findings from Phase 1. The comparison is based on the initial pass/fail results, the branch coverage improvement, the quality of the test cases, and the common problems seen during the work.
+
+\subsection{Code Correctness Comparison}
+
+In the first base test run, ChatGPT GPT-5.4 passed 28 out of 30 tasks, while Gemini passed 25 out of 30 tasks. This gives ChatGPT GPT-5.4 a success rate of 93.33\%, compared with 83.33\% for Gemini.
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.2}
+\caption{Initial Code Correctness Comparison}
+\label{tab:correctness-comparison}
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{LLM} & \textbf{Passed} & \textbf{Failed} & \textbf{Success Rate} \\
+\midrule
+ChatGPT GPT-5.4 & 28 & 2 & 93.33\% \\
+Gemini & 25 & 5 & 83.33\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+From this result, ChatGPT GPT-5.4 performed better in the initial correctness check. Still, both models solved most of the selected HumanEval tasks. The failed cases show why testing is necessary, because even short programming prompts can still lead to small logic mistakes, missed conditions, or wrong handling of special cases.
+
+After the failed cases were reviewed and corrected, both models reached 30 out of 30 passing tasks. This improvement shows that test feedback was useful for guiding the correction process.
+
+\subsection{Coverage Comparison}
+
+Branch coverage gave more information than the pass/fail results alone. Some solutions passed their tests, but the coverage results showed that not every branch was executed. This means that the first test files were not always enough to check the full behavior of the code.
+
+For the checked ChatGPT GPT-5.4 samples, the average branch coverage increased from 80.6\% to 100\% after adding new tests. For Gemini, the checked samples improved from approximately 77\% to around 100\%. These results show that coverage feedback helped us add more useful tests instead of adding random cases.
+
+This part of the project showed that passing tests and having good coverage are not the same thing. A solution can pass all current tests while some branches are still not tested. For that reason, JaCoCo was useful for finding weak points in the test files.
+
+\subsection{Test Quality Comparison}
+
+The improved tests were stronger than the first test files because they covered more boundary and edge cases. Extra tests were added for cases such as empty strings, exact threshold values, repeated substrings, negative values, and small input sizes. These are the kinds of inputs that are easy to ignore but often important in testing.
+
+Test smell analysis also helped improve the test files. Some tests needed clearer names, stronger assertions, or less repetition. These changes made the tests easier to read and easier to understand when a failure happened.
+
+Overall, ChatGPT GPT-5.4 had better initial correctness results, but both models improved after feedback. Gemini had more failed tasks at the beginning, but the correction and test improvement steps helped reduce those issues.
+
+\subsection{Common Error Patterns}
+
+Most of the problems were related to edge cases or incomplete checking. Some generated solutions worked for normal inputs but were weaker when the input was empty, very small, repeated, or close to a condition boundary. This was especially visible in string, list, and numerical tasks.
+
+Another pattern was that some generated tests focused mostly on simple examples. These tests were useful as a starting point, but they did not always check the less obvious cases. Because of this, branch coverage analysis and manual test assessment were needed.
+
+In general, the results show that LLMs can help with code and test generation, but their outputs still need to be checked. The best results came when LLM output was combined with normal testing methods such as unit testing, coverage analysis, test smell review, and manual black-box testing.
+
+\section{Conclusion}
+
+In Phase 1, ChatGPT GPT-5.4 and Gemini were compared using thirty selected prompts from the Java HumanEval dataset. The models were used to generate Java solutions and test cases, and the outputs were evaluated using JUnit 5, Maven, JaCoCo branch coverage, test smell analysis, and manual test assessment.
+
+The initial results showed that ChatGPT GPT-5.4 performed better, passing 28 out of 30 tasks. Gemini passed 25 out of 30 tasks. After the failed cases were reviewed and corrected, both models reached 30 out of 30 passing tasks. However, this does not mean that the first outputs were fully reliable. It only shows that the models improved when they were given test feedback.
+
+The coverage results also showed the importance of improving the tests. Some tests passed at first, but still missed branches in the code. After adding new test cases, the checked ChatGPT samples improved from 80.6\% to 100\% branch coverage, while the checked Gemini samples improved from approximately 77\% to around 100\%. This made the test suite stronger and gave a better evaluation of the generated code.
+
+Overall, ChatGPT GPT-5.4 gave better initial results for this prompt set, but both models were useful when their outputs were checked and improved through testing. The main limitation of this phase is that only thirty prompts were used, so the results cannot represent all programming tasks. In future work, the same process could be applied to more prompts, larger programs, and stronger mutation testing to better measure how well the generated tests can detect faults.
+
+% -------------------- Acknowledgment --------------------
+\section*{Acknowledgment}
+This project was carried out as a group project for the BLG 475E Software Quality and Testing course. The work was shared between the group members, but each member focused more on some parts of the project. Cemalcan Sağlam worked on using the selected LLMs, generating the Java solutions, organizing the model outputs, and preparing part of the LLM interaction logs. Ayham Alhasan worked on running the JUnit tests, checking branch coverage with Maven and JaCoCo, improving the test cases, and reviewing test smell issues. Najib Attar worked on the manual testing part, including equivalence class partitioning, boundary value analysis, checking missing test cases, and writing the related parts of the report.
+
+During the project, the group also discussed the generated code, failed cases, test improvements, and the comparison between the two LLMs together. The generated Java code, JUnit test files, LLM interaction logs, coverage-related files, and project documentation are stored in the GitHub repository. The repository is available at: \url{https://github.com/itu-itis22-saglamc22/Software-Quality-and-Testing-Project}.
+
+Although each member had a main responsibility, the project was reviewed and discussed together during the process. The generated Java code, JUnit test files, LLM interaction logs, coverage-related files, and project documentation are stored in the GitHub repository. The repository is available at: \url{https://github.com/itu-itis22-saglamc22/Software-Quality-and-Testing-Project}.
+
+% -------------------- References --------------------
+% Add references later after selecting the 5 literature review papers.
+
+\begin{thebibliography}{5}
+
+\bibitem{chatunitest}
+Y. Chen, Z. Hu, C. Zhi, J. Han, S. Deng, and J. Yin,
+``ChatUniTest: A Framework for LLM-Based Test Generation,''
+in \emph{Proceedings of the ACM International Conference on the Foundations of Software Engineering},
+2024, doi: \href{https://doi.org/10.1145/3663529.3663801}{10.1145/3663529.3663801}.
+
+\bibitem{testgenllm}
+N. Alshahwan et al.,
+``Automated Unit Test Improvement Using Large Language Models at Meta,''
+in \emph{Proceedings of the ACM International Conference on the Foundations of Software Engineering},
+2024, doi: \href{https://doi.org/10.1145/3663529.3663839}{10.1145/3663529.3663839}.
+
+\bibitem{coverup}
+J. A. Pizzorno and E. D. Berger,
+``CoverUp: Effective High Coverage Test Generation for Python,''
+\emph{Proceedings of the ACM on Software Engineering},
+2025, doi: \href{https://doi.org/10.1145/3729398}{10.1145/3729398}.
+
+\bibitem{chusurvey}
+B. Chu et al.,
+``Large Language Models for Unit Test Generation: Achievements, Challenges, and Opportunities,''
+arXiv:2511.21382, 2025. [Online]. Available:
+\url{https://arxiv.org/abs/2511.21382}
+
+\bibitem{ach}
+C. Foster et al.,
+``Mutation-Guided LLM-Based Test Generation at Meta,''
+in \emph{Proceedings of the ACM International Conference on the Foundations of Software Engineering},
+2025, doi: \href{https://doi.org/10.1145/3696630.3728544}{10.1145/3696630.3728544}.
+
+\end{thebibliography}
+
+\end{document}
