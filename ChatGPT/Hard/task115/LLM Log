@@ -1,0 +1,163 @@
+==============================
+LLM INTERACTION LOG — TASK115
+==============================
+
+Task: Java/115
+Objective: Calculate the number of bucket refills needed to empty all wells in a grid, where each row represents one well and each 1 represents one unit of water.
+
+--------------------------------
+Step 1: Initial Test Conversion
+--------------------------------
+
+Prompt:
+Convert the given main-based test into a proper JUnit test for the maxFill method.
+
+LLM Response:
+Provided a JUnit 5 test class using assertEquals to validate refill counts for different grids and bucket capacities.
+
+Explanation:
+The output was used directly to replace manual testing with JUnit-based tests, enabling automated execution and compatibility with JaCoCo.
+
+--------------------------------
+Step 2: Identify Missing Coverage
+--------------------------------
+
+Prompt:
+Improve the test cases to ensure full coverage, including edge cases and rounding behavior.
+
+LLM Response:
+Suggested adding:
+- capacity 1 case
+- partially filled rows requiring ceiling division
+- rows with no water
+- fully filled rows
+- capacity larger than row water count
+
+Explanation:
+The method calculates refill count per row using ceiling division. Therefore, tests must verify:
+- exact division
+- rounded-up division
+- zero-water rows
+- large-capacity behavior
+
+--------------------------------
+Step 3: Refine Tests for Full Coverage
+--------------------------------
+
+Prompt:
+Add test cases to cover all logical paths in row summation and bucket capacity calculation.
+
+LLM Response:
+Finalized test suite including:
+- unit capacity
+- capacity two with partial rows
+- empty wells
+- full wells
+- capacity larger than row content
+
+Explanation:
+The final test suite ensures:
+- row water counting is correct
+- empty rows contribute zero refills
+- non-empty rows with capacity larger than water count still require one refill
+- ceiling division behavior is validated
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task115;
+
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private static final int UNIT_CAPACITY = 1;
+    private static final int TWO_UNIT_CAPACITY = 2;
+    private static final int FIVE_UNIT_CAPACITY = 5;
+    private static final int NINE_UNIT_CAPACITY = 9;
+    private static final int SIX_REFILLS = 6;
+    private static final int FIVE_REFILLS = 5;
+    private static final int FOUR_REFILLS = 4;
+    private static final int TWO_REFILLS = 2;
+    private static final int NO_REFILLS = 0;
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void countsEachWaterUnitWhenCapacityIsOne() {
+        List<List<Integer>> grid = List.of(
+                List.of(0, 0, 1, 0),
+                List.of(0, 1, 0, 0),
+                List.of(1, 1, 1, 1));
+
+        assertEquals(SIX_REFILLS, solution.maxFill(grid, UNIT_CAPACITY));
+    }
+
+    @Test
+    void roundsUpPartiallyFilledRowsForCapacityTwo() {
+        List<List<Integer>> grid = List.of(
+                List.of(0, 0, 1, 1),
+                List.of(0, 0, 0, 0),
+                List.of(1, 1, 1, 1),
+                List.of(0, 1, 1, 1));
+
+        assertEquals(FIVE_REFILLS, solution.maxFill(grid, TWO_UNIT_CAPACITY));
+    }
+
+    @Test
+    void emptyWaterCellsNeedNoRefills() {
+        List<List<Integer>> grid = List.of(
+                List.of(0, 0, 0),
+                List.of(0, 0, 0));
+
+        assertEquals(NO_REFILLS, solution.maxFill(grid, FIVE_UNIT_CAPACITY));
+    }
+
+    @Test
+    void fullRowsUseTwoRefillsEachWhenCapacityIsTwo() {
+        List<List<Integer>> grid = List.of(
+                List.of(1, 1, 1, 1),
+                List.of(1, 1, 1, 1));
+
+        assertEquals(FOUR_REFILLS, solution.maxFill(grid, TWO_UNIT_CAPACITY));
+    }
+
+    @Test
+    void capacityLargerThanRowStillRequiresOneRefillPerNonEmptyRow() {
+        List<List<Integer>> grid = List.of(
+                List.of(1, 1, 1, 1),
+                List.of(1, 1, 1, 1));
+
+        assertEquals(TWO_REFILLS, solution.maxFill(grid, NINE_UNIT_CAPACITY));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates bucket refill calculation across several important cases:
+- unit capacity
+- ceiling division for partially filled rows
+- zero-water wells
+- full rows
+- capacity larger than row water amount
+
+The LLM-assisted refinement ensured complete coverage of row-wise summation and refill calculation behavior.
