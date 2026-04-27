@@ -1,0 +1,134 @@
+==============================
+LLM INTERACTION LOG — TASK3
+==============================
+
+Task: Java/3
+Objective: Determine if a sequence of deposit/withdrawal operations causes the balance to fall below zero at any point.
+
+--------------------------------
+Step 1: Initial Test Conversion
+--------------------------------
+
+Prompt:
+Convert the main-based test into a proper JUnit test for the belowZero method.
+
+LLM Response:
+Provided a JUnit 5 test class using assertTrue and assertFalse for validating balance behavior across different operation sequences.
+
+Explanation:
+The output was used directly to replace manual testing with JUnit-based tests, enabling automated execution and integration with JaCoCo.
+
+--------------------------------
+Step 2: Identify Missing Coverage
+--------------------------------
+
+Prompt:
+Improve test cases to ensure full branch coverage, including edge cases.
+
+LLM Response:
+Suggested adding:
+- empty input case
+- sequences that never drop below zero
+- sequences that drop below zero at different points (early, mid, late)
+
+Explanation:
+The method contains two key branches:
+- balance < 0 → return true
+- end of loop → return false
+
+To fully cover both branches, tests must include:
+- cases where balance never becomes negative
+- cases where balance becomes negative at different positions in the sequence
+
+--------------------------------
+Step 3: Refine Tests for Full Coverage
+--------------------------------
+
+Prompt:
+Ensure all logical paths are exercised, including early and late overdraft scenarios.
+
+LLM Response:
+Finalized test suite including:
+- empty operations list (loop skip)
+- balanced sequences (never below zero)
+- early overdraft
+- mid-sequence overdraft
+- late overdraft
+
+Explanation:
+The final test suite ensures:
+- loop skip path is covered
+- balance accumulation logic is validated
+- early return branch (balance < 0) is triggered in multiple scenarios
+- full traversal branch (never negative) is also covered
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task3;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyOperationsNeverGoesBelowZero() {
+        assertFalse(solution.belowZero(new ArrayList<>(Arrays.asList())));
+    }
+
+    @Test
+    void balancedOperationsNeverGoesBelowZero() {
+        assertFalse(solution.belowZero(new ArrayList<>(Arrays.asList(1, 2, -3, 1, 2, -3))));
+    }
+
+    @Test
+    void largeNegativeDropGoesBelowZero() {
+        assertTrue(solution.belowZero(new ArrayList<>(Arrays.asList(1, 2, -4, 5, 6))));
+    }
+
+    @Test
+    void perfectlyCancellingOperationsNeverGoesBelowZero() {
+        assertFalse(solution.belowZero(new ArrayList<>(Arrays.asList(1, -1, 2, -2, 5, -5, 4, -4))));
+    }
+
+    @Test
+    void offByOneFinalDropGoesBelowZero() {
+        assertTrue(solution.belowZero(new ArrayList<>(Arrays.asList(1, -1, 2, -2, 5, -5, 4, -5))));
+    }
+
+    @Test
+    void earlyOverdraftGoesBelowZero() {
+        assertTrue(solution.belowZero(new ArrayList<>(Arrays.asList(1, -2, 2, -2, 5, -5, 4, -4))));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates all execution paths of the balance tracking logic:
+- no-iteration case (empty input)
+- full traversal without overdraft
+- early, mid, and late overdraft scenarios
+
+The LLM-assisted refinement ensured complete branch coverage and robust validation of cumulative state behavior.
