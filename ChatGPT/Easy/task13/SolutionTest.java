@@ -1,52 +1,52 @@
 package task13;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class SolutionTest {
 
-    @Test
-    void testGreatestCommonDivisorProvidedCases() {
-        Solution s = new Solution();
+    private Solution solution;
 
-        assertEquals(1, s.greatestCommonDivisor(3, 7));
-        assertEquals(5, s.greatestCommonDivisor(10, 15));
-        assertEquals(7, s.greatestCommonDivisor(49, 14));
-        assertEquals(12, s.greatestCommonDivisor(144, 60));
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
     }
 
     @Test
-    void testFirstNumberZero() {
-        Solution s = new Solution();
-
-        assertEquals(7, s.greatestCommonDivisor(0, 7));
+    void gcdOfCoprimeNumbersReturnsOne() {
+        assertEquals(1, solution.greatestCommonDivisor(3, 7));
     }
 
     @Test
-    void testSecondNumberZero() {
-        Solution s = new Solution();
-
-        assertEquals(9, s.greatestCommonDivisor(9, 0));
+    void gcdOfMultiplesReturnsDivisor() {
+        assertEquals(5, solution.greatestCommonDivisor(10, 15));
+        assertEquals(7, solution.greatestCommonDivisor(49, 14));
+        assertEquals(12, solution.greatestCommonDivisor(144, 60));
     }
 
     @Test
-    void testBothNumbersEqual() {
-        Solution s = new Solution();
-
-        assertEquals(6, s.greatestCommonDivisor(6, 6));
+    void gcdWhenFirstNumberIsZeroReturnsSecond() {
+        assertEquals(7, solution.greatestCommonDivisor(0, 7));
     }
 
     @Test
-    void testFirstGreaterThanSecond() {
-        Solution s = new Solution();
-
-        assertEquals(4, s.greatestCommonDivisor(20, 8));
+    void gcdWhenSecondNumberIsZeroReturnsFirst() {
+        assertEquals(9, solution.greatestCommonDivisor(9, 0));
     }
 
     @Test
-    void testSecondGreaterThanFirst() {
-        Solution s = new Solution();
+    void gcdOfEqualNumbersReturnsThatNumber() {
+        assertEquals(6, solution.greatestCommonDivisor(6, 6));
+    }
 
-        assertEquals(3, s.greatestCommonDivisor(6, 21));
+    @Test
+    void gcdWhenFirstGreaterReturnsCorrectDivisor() {
+        assertEquals(4, solution.greatestCommonDivisor(20, 8));
+    }
+
+    @Test
+    void gcdWhenSecondGreaterReturnsCorrectDivisor() {
+        assertEquals(3, solution.greatestCommonDivisor(6, 21));
     }
 }
