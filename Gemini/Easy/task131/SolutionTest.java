@@ -1,25 +1,34 @@
 package task131;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
+class SolutionTest {
 
-        List<Boolean> correct = Arrays.asList(
-                s.digits(5) == 5,
-                s.digits(54) == 5,
-                s.digits(120) == 1,
-                s.digits(5014) == 5,
-                s.digits(98765) == 315,
-                s.digits(5576543) == 2625);
+    @Test
+    @DisplayName("Should calculate product of odd digits correctly")
+    void testDigits_Logic() {
+        Solution solution = new Solution();
+        
+        // Tests mix of odd and even digits
+        assertAll("Regular Inputs",
+            () -> assertEquals(5, solution.digits(5)),
+            () -> assertEquals(5, solution.digits(54)),
+            () -> assertEquals(1, solution.digits(120)),
+            () -> assertEquals(5, solution.digits(5014)),
+            () -> assertEquals(315, solution.digits(98765)), // 9 * 7 * 5 = 315
+            () -> assertEquals(2625, solution.digits(5576543)) // 5 * 5 * 7 * 5 * 3 = 2625
+        );
+    }
 
-        if (correct.contains(false)) {
-            int failedIndex = correct.indexOf(false);
-            throw new AssertionError("Test case at index " + failedIndex + " failed!");
-        } else {
-            System.out.println("Task 131: All tests passed successfully!");
-        }
+    @Test
+    @DisplayName("Should handle numbers with no odd digits")
+    void testDigits_NoOddDigits() {
+        Solution solution = new Solution();
+        
+        // This ensures the branch where 'product' is never updated is covered
+        assertEquals(0, solution.digits(2468), "Should return 0 if no odd digits exist");
+        assertEquals(0, solution.digits(0), "Should return 0 for input 0");
     }
 }
