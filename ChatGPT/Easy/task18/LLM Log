@@ -1,0 +1,112 @@
+==============================
+LLM INTERACTION LOG — TASK18
+==============================
+
+Task: Java/18
+Objective: Count how many times a substring appears in a string, including overlapping occurrences.
+
+--------------------------------
+Step 1: Initial Test Conversion
+--------------------------------
+
+Prompt:
+Convert the given main-based test into a proper JUnit test for howManyTimes method.
+
+LLM Response:
+Provided a JUnit 5 test class using assertEquals to validate substring counting behavior.
+
+Explanation:
+The output was used directly to replace manual testing with JUnit tests, enabling automation and compatibility with JaCoCo.
+
+--------------------------------
+Step 2: Identify Missing Coverage
+--------------------------------
+
+Prompt:
+Improve test cases to ensure better coverage, including edge cases.
+
+LLM Response:
+Suggested adding:
+- empty string case
+- overlapping substring case
+- standard matching cases
+
+Explanation:
+The original tests already covered core logic well (including overlapping behavior). However, edge cases such as empty string needed explicit validation.
+
+--------------------------------
+Step 3: Refine Tests
+--------------------------------
+
+Prompt:
+Ensure coverage includes edge cases and substring scanning behavior.
+
+LLM Response:
+Finalized test suite including:
+- empty string case
+- repeated substring occurrences
+- overlapping matches
+- single occurrence case
+
+Explanation:
+The final test suite ensures:
+- loop does not execute for empty string
+- overlapping substring logic is validated
+- standard matching paths are covered
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task18;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyStringContainsSubstringZeroTimes() {
+        assertEquals(0, solution.howManyTimes("", "x"));
+    }
+
+    @Test
+    void singleCharSubstringCountedCorrectly() {
+        assertEquals(4, solution.howManyTimes("xyxyxyx", "x"));
+    }
+
+    @Test
+    void overlappingSubstringCountedCorrectly() {
+        assertEquals(4, solution.howManyTimes("cacacacac", "cac"));
+    }
+
+    @Test
+    void nonOverlappingSubstringCountedOnce() {
+        assertEquals(1, solution.howManyTimes("john doe", "john"));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates both overlapping and non-overlapping substring occurrences.
+
+Edge cases such as empty input and repeated patterns were included, ensuring full coverage of loop behavior and substring matching logic.
+
+The LLM-assisted refinement ensured correctness and robustness of the implementation.
