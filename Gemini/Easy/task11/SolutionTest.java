@@ -11,7 +11,6 @@ class SolutionTest {
     void testMakePalindrome_EdgeCases() {
         Solution solution = new Solution();
         
-        // Bu iki test 'if (string == null || string.isEmpty())' dalını kapsar
         assertAll("Edge Cases",
             () -> assertEquals("", solution.makePalindrome(""), "Empty string should return empty"),
             () -> assertEquals("", solution.makePalindrome(null), "Null should return empty")
