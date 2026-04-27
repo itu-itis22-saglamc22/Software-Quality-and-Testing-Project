@@ -1,19 +1,17 @@
 package task13;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
+class SolutionTest {
+
+    @Test
+    void testGreatestCommonDivisor() {
         Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.greatestCommonDivisor(3, 7) == 1,
-                s.greatestCommonDivisor(10, 15) == 5,
-                s.greatestCommonDivisor(49, 14) == 7,
-                s.greatestCommonDivisor(144, 60) == 12);
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task13: All tests passed.");
+
+        assertEquals(1, s.greatestCommonDivisor(3, 7));
+        assertEquals(5, s.greatestCommonDivisor(10, 15));
+        assertEquals(7, s.greatestCommonDivisor(49, 14));
+        assertEquals(12, s.greatestCommonDivisor(144, 60));
     }
 }
