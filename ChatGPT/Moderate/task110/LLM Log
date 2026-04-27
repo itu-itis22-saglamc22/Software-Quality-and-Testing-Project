@@ -1,0 +1,167 @@
+==============================
+LLM INTERACTION LOG — TASK110
+==============================
+
+Task: Java/110
+Objective: Determine whether elements can be exchanged between two lists so that all elements in the first list become even.
+
+--------------------------------
+Step 1: Initial Implementation and Test Generation
+--------------------------------
+
+Prompt:
+Create a proper Solution.java and test file for the exchange method based on the given problem description.
+
+The task requires:
+- counting odd numbers in the first list
+- counting even numbers in the second list
+- returning "YES" if enough even numbers exist to replace odd values in the first list
+- returning "NO" otherwise
+
+LLM Response:
+Provided a Solution.java implementation using parity counting:
+- count odd elements in lst1
+- count even elements in lst2
+- compare both counts and return "YES" or "NO"
+
+Also provided an initial main-based test file.
+
+Explanation:
+The LLM output was used as the base implementation and test suite. The logic correctly reduces the exchange problem to comparing the number of odd elements in the first list with the number of even elements available in the second list.
+
+--------------------------------
+Step 2: Convert to JUnit Testing
+--------------------------------
+
+Prompt:
+Convert the main-based test into a proper JUnit test for the exchange method.
+
+LLM Response:
+Replaced manual assertion logic with JUnit 5 assertEquals tests.
+
+Explanation:
+JUnit was used to make the tests compatible with Maven and JaCoCo, allowing automated execution and coverage measurement.
+
+--------------------------------
+Step 3: Improve Test Quality and Coverage
+--------------------------------
+
+Prompt:
+Improve the test suite by covering both successful and unsuccessful exchange scenarios.
+
+LLM Response:
+Suggested adding:
+- cases where exchange is possible
+- cases where exchange is not possible
+- all-odd first list with all-even second list
+- insufficient even values in second list
+- lists with already-even values
+- larger even values to confirm parity-based logic only
+
+Explanation:
+The method has two important logical outcomes:
+- even >= odd → "YES"
+- even < odd → "NO"
+
+The final tests cover both outcomes using different list compositions.
+
+--------------------------------
+Step 4: Refine Tests and Remove Test Smells
+--------------------------------
+
+Prompt:
+Improve the test file by making expected string values clearer and avoiding repeated literals.
+
+LLM Response:
+Introduced constants:
+- EXCHANGE_POSSIBLE = "YES"
+- EXCHANGE_NOT_POSSIBLE = "NO"
+
+Explanation:
+The response was used to reduce repeated string literals and improve readability. Test names were also written descriptively to explain the scenario being validated.
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task110;
+
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private static final String EXCHANGE_POSSIBLE = "YES";
+    private static final String EXCHANGE_NOT_POSSIBLE = "NO";
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void balancedOddAndEvenCountsCanBeExchanged() {
+        assertEquals(EXCHANGE_POSSIBLE, solution.exchange(List.of(1, 2, 3, 4), List.of(1, 2, 3, 4)));
+    }
+
+    @Test
+    void notEnoughEvenNumbersInSecondListCannotBeExchanged() {
+        assertEquals(EXCHANGE_NOT_POSSIBLE, solution.exchange(List.of(1, 2, 3, 4), List.of(1, 5, 3, 4)));
+    }
+
+    @Test
+    void reorderedParityValuesCanBeExchanged() {
+        assertEquals(EXCHANGE_POSSIBLE, solution.exchange(List.of(1, 2, 3, 4), List.of(2, 1, 4, 3)));
+    }
+
+    @Test
+    void allOddFirstListCanExchangeWithAllEvenSecondList() {
+        assertEquals(EXCHANGE_POSSIBLE, solution.exchange(List.of(5, 7, 3), List.of(2, 6, 4)));
+    }
+
+    @Test
+    void oneOddInSecondListMakesExchangeImpossible() {
+        assertEquals(EXCHANGE_NOT_POSSIBLE, solution.exchange(List.of(5, 7, 3), List.of(2, 6, 3)));
+    }
+
+    @Test
+    void manyOddValuesNeedEnoughEvenReplacements() {
+        assertEquals(
+                EXCHANGE_NOT_POSSIBLE,
+                solution.exchange(List.of(3, 2, 6, 1, 8, 9), List.of(3, 5, 5, 1, 1, 1)));
+    }
+
+    @Test
+    void largeEvenValuesCanSatisfyExchange() {
+        assertEquals(EXCHANGE_POSSIBLE, solution.exchange(List.of(100, 200), List.of(200, 200)));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates:
+- exchange possible cases
+- exchange impossible cases
+- exact parity count comparison
+- reordered parity values
+- all-odd and all-even list scenarios
+- parity-based logic independent of numeric magnitude
+
+The LLM-assisted workflow improved the test suite by:
+- converting manual tests to JUnit
+- covering both decision outcomes
+- improving readability with constants and descriptive test names
