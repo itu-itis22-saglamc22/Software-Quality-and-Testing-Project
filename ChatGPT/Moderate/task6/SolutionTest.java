@@ -1,18 +1,32 @@
 package task6;
 
-import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.parseNestedParens("(()()) ((())) () ((())()())").equals(Arrays.asList(2, 3, 1, 3)),
-                s.parseNestedParens("() (()) ((())) (((())))").equals(Arrays.asList(1, 2, 3, 4)),
-                s.parseNestedParens("(()(())((())))").equals(Arrays.asList(4)));
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task6: All tests passed.");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void returnsDepthForMixedParenGroups() {
+        assertEquals(List.of(2, 3, 1, 3), solution.parseNestedParens("(()()) ((())) () ((())()())"));
+    }
+
+    @Test
+    void returnsIncreasingDepthsForIncreasinglyNestedGroups() {
+        assertEquals(List.of(1, 2, 3, 4), solution.parseNestedParens("() (()) ((())) (((())))"));
+    }
+
+    @Test
+    void returnsDepthForSingleNestedGroupWithoutSpaces() {
+        assertEquals(List.of(4), solution.parseNestedParens("(()(())((())))"));
     }
 }
