@@ -1,0 +1,166 @@
+==============================
+LLM INTERACTION LOG — TASK143
+==============================
+
+Task: Java/143
+Objective: Return a sentence containing only the words whose lengths are prime numbers, preserving original order.
+
+--------------------------------
+Step 1: Initial Implementation and Test Generation
+--------------------------------
+
+Prompt:
+Create a proper Solution.java and test file for the wordsInSentence method based on the given problem description.
+
+The task requires:
+- splitting a sentence into words
+- checking whether each word length is prime
+- keeping only prime-length words
+- preserving the original word order
+- returning the selected words joined by spaces
+
+LLM Response:
+Provided a Solution.java implementation using:
+- sentence.split(" ") to separate words
+- a helper method to check prime lengths
+- a list to collect selected words
+- String.join(" ", result) to build the final output
+
+Also provided an initial main-based test file.
+
+Explanation:
+The LLM output was used as the base implementation. The solution correctly filters words according to prime-length criteria and preserves ordering.
+
+--------------------------------
+Step 2: Convert to JUnit Testing
+--------------------------------
+
+Prompt:
+Convert the main-based test into a proper JUnit test for the wordsInSentence method.
+
+LLM Response:
+Replaced manual assertion logic with JUnit 5 assertEquals tests.
+
+Explanation:
+JUnit was used to enable automated testing and compatibility with Maven and JaCoCo coverage measurement.
+
+--------------------------------
+Step 3: Improve Test Coverage and Quality
+--------------------------------
+
+Prompt:
+Improve the test suite to cover prime-length filtering, non-prime filtering, empty output, and word order preservation.
+
+LLM Response:
+Suggested adding:
+- sentence with one prime-length word
+- sentence with multiple prime-length words
+- sentence with both prime and non-prime lengths
+- sentence where all words are kept
+- sentence where no words are kept
+- case where a prime-length word appears after a non-prime word
+
+Explanation:
+The method depends on a prime-length decision for each word. To fully cover behavior:
+- prime lengths must be accepted
+- non-prime lengths must be rejected
+- length 1 must be rejected as non-prime
+- order must remain unchanged
+- empty result must return an empty string
+
+--------------------------------
+Step 4: Refine Tests for Full Coverage
+--------------------------------
+
+Prompt:
+Finalize tests to ensure all logical paths of prime-length filtering are exercised.
+
+LLM Response:
+Finalized the test suite with seven descriptive JUnit test methods covering different sentence structures and output patterns.
+
+Explanation:
+The final tests ensure:
+- prime-length words are included
+- non-prime-length words are excluded
+- all-prime sentences are preserved
+- no-prime sentences return an empty string
+- filtering does not change word order
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task143;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void keepsOnlyPrimeLengthWordInShortSentence() {
+        assertEquals("is", solution.wordsInSentence("This is a test"));
+    }
+
+    @Test
+    void keepsMultiplePrimeLengthWords() {
+        assertEquals("go for", solution.wordsInSentence("lets go for swimming"));
+    }
+
+    @Test
+    void dropsWordsWhoseLengthsAreNotPrime() {
+        assertEquals("there is no place", solution.wordsInSentence("there is no place available here"));
+    }
+
+    @Test
+    void keepsPrimeLengthNamesAndShortWords() {
+        assertEquals("Hi am Hussein", solution.wordsInSentence("Hi I am Hussein"));
+    }
+
+    @Test
+    void keepsAllWordsWhenEveryLengthIsPrime() {
+        assertEquals("go for it", solution.wordsInSentence("go for it"));
+    }
+
+    @Test
+    void returnsEmptyStringWhenNoWordLengthIsPrime() {
+        assertEquals("", solution.wordsInSentence("here"));
+    }
+
+    @Test
+    void keepsPrimeLengthWordAfterNonPrimeWord() {
+        assertEquals("is", solution.wordsInSentence("here is"));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates:
+- keeping words with prime lengths
+- removing words with non-prime lengths
+- rejecting length-one words
+- returning an empty string when no words qualify
+- preserving original word order after filtering
+
+The LLM-assisted workflow improved the test suite by:
+- converting manual tests into JUnit
+- covering all prime-checking decision paths
+- improving readability with descriptive test names
