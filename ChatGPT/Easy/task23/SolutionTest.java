@@ -1,18 +1,30 @@
 package task23;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        List<Boolean> correct = Arrays.asList(
-                s.strlen("") == 0,
-                s.strlen("x") == 1,
-                s.strlen("asdasnakj") == 9);
-        if (correct.contains(false)) {
-            throw new AssertionError();
-        }
-        System.out.println("Task23: All tests passed.");
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyStringHasLengthZero() {
+        assertEquals(0, solution.strlen(""));
+    }
+
+    @Test
+    void singleCharStringHasLengthOne() {
+        assertEquals(1, solution.strlen("x"));
+    }
+
+    @Test
+    void multiCharStringHasCorrectLength() {
+        assertEquals(9, solution.strlen("asdasnakj"));
     }
 }
