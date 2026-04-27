@@ -1,0 +1,60 @@
+Firstly unit test file given to LLM and asked to improve branch coverage to %100.
+
+Prompt1:
+package task14;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+class SolutionTest {
+
+    @Test
+    void testAllPrefixes() {
+        Solution s = new Solution();
+
+        assertEquals(List.of(), s.allPrefixes(""));
+        assertEquals(Arrays.asList("a", "as", "asd", "asdf", "asdfg", "asdfgh"), s.allPrefixes("asdfgh"));
+        assertEquals(Arrays.asList("W", "WW", "WWW"), s.allPrefixes("WWW"));
+    }
+}
+
+improve this method's branch coverage to %100. It is %83 right now. 
+
+
+Output1:
+package task14;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+class SolutionTest {
+
+    @Test
+    void testAllPrefixes() {
+        Solution s = new Solution();
+
+        assertEquals(List.of(), s.allPrefixes(""));
+        assertEquals(Arrays.asList("a", "as", "asd", "asdf", "asdfg", "asdfgh"), s.allPrefixes("asdfgh"));
+        assertEquals(Arrays.asList("W", "WW", "WWW"), s.allPrefixes("WWW"));
+    }
+
+    @Test
+    void testNullInput() {
+        Solution s = new Solution();
+
+        assertEquals(List.of(), s.allPrefixes(null));
+    }
+
+    @Test
+    void testSingleCharacter() {
+        Solution s = new Solution();
+
+        assertEquals(List.of("A"), s.allPrefixes("A"));
+    }
+}
