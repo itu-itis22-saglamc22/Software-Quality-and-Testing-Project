@@ -1,22 +1,30 @@
 package task23;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
-public class Main {
-    public static void main(String[] args) {
-        Solution s = new Solution();
+class SolutionTest {
 
-        List<Boolean> correct = Arrays.asList(
-                s.strlen("") == 0,
-                s.strlen("x") == 1,
-                s.strlen("asdasnakj") == 9);
+    @Test
+    @DisplayName("Should return correct string length for various inputs")
+    void testStrlen_Logic() {
+        Solution solution = new Solution();
+        
+        assertAll("String Lengths",
+            () -> assertEquals(0, solution.strlen(""), "Empty string should have length 0"),
+            () -> assertEquals(1, solution.strlen("x"), "Single character should have length 1"),
+            () -> assertEquals(9, solution.strlen("asdasnakj"), "Multi-character string should have length 9"),
+            () -> assertEquals(5, solution.strlen("Hello"), "Standard word length check")
+        );
+    }
 
-        if (correct.contains(false)) {
-            int failedIndex = correct.indexOf(false);
-            throw new AssertionError("Test case at index " + failedIndex + " failed!");
-        } else {
-            System.out.println("Task 23: All tests passed successfully!");
-        }
+    @Test
+    @DisplayName("Should handle null input gracefully")
+    void testStrlen_NullInput() {
+        Solution solution = new Solution();
+        
+        // This test ensures the null-check branch is fully covered
+        assertEquals(0, solution.strlen(null), "Null input should return length 0");
     }
 }
