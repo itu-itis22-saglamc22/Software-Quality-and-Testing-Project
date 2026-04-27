@@ -1,0 +1,147 @@
+==============================
+LLM INTERACTION LOG — TASK37
+==============================
+
+Task: Java/37
+Objective: Sort elements at even indices while keeping odd-indexed elements unchanged.
+
+--------------------------------
+Step 1: Initial Implementation and Test Generation
+--------------------------------
+
+Prompt:
+Create Solution.java and a test file for sortEven based on the problem description.
+
+The task requires:
+- extracting elements at even indices
+- sorting only those extracted values
+- reinserting them into even indices
+- preserving odd-indexed values in their original positions
+
+LLM Response:
+Provided a Solution.java implementation using:
+- a list to store even-indexed elements
+- Collections.sort to sort extracted values
+- reinsertion into the original even-indexed positions
+
+Also provided a main-based test file.
+
+Explanation:
+The implementation correctly separates the values that should be sorted from the values that must remain fixed.
+
+--------------------------------
+Step 2: Convert to JUnit Testing
+--------------------------------
+
+Prompt:
+Convert the main-based test into a proper JUnit test for the sortEven method.
+
+LLM Response:
+Replaced manual assertions with JUnit 5 assertEquals tests.
+
+Explanation:
+JUnit was used to support automated execution and JaCoCo coverage measurement.
+
+--------------------------------
+Step 3: Improve Test Coverage and Quality
+--------------------------------
+
+Prompt:
+Improve the test suite to cover sorting behavior for even indices and preservation of odd indices.
+
+LLM Response:
+Suggested adding:
+- already sorted even-index values
+- positive and negative values at even indices
+- cases verifying odd indices remain unchanged
+
+Explanation:
+The method depends on index parity:
+- even indices are collected, sorted, and replaced
+- odd indices should never be modified
+
+The tests were designed to validate both responsibilities.
+
+--------------------------------
+Step 4: Final Test Refinement
+--------------------------------
+
+Prompt:
+Ensure the test suite covers mixed values and index-preservation behavior.
+
+LLM Response:
+Finalized test suite with:
+- already sorted case
+- mixed positive/negative values
+- explicit odd-index preservation case
+
+Explanation:
+The final tests ensure:
+- correct extraction of even-indexed values
+- correct sorted reinsertion
+- preservation of odd-indexed values
+- correctness for both positive and negative integers
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task37;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void leavesAlreadySortedEvenIndexesUnchanged() {
+        assertEquals(List.of(1, 2, 3), solution.sortEven(new ArrayList<>(List.of(1, 2, 3))));
+    }
+
+    @Test
+    void sortsEvenIndexesAcrossPositiveAndNegativeValues() {
+        assertEquals(
+                List.of(-10, 3, -5, 2, -3, 3, 5, 0, 9, 1, 123),
+                solution.sortEven(new ArrayList<>(List.of(5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10))));
+    }
+
+    @Test
+    void keepsOddIndexesFixedWhileSortingEvenIndexes() {
+        assertEquals(
+                List.of(-12, 8, 3, 4, 5, 2, 12, 11, 23, -10),
+                solution.sortEven(new ArrayList<>(List.of(5, 8, -12, 4, 23, 2, 3, 11, 12, -10))));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates:
+- sorting only even-indexed elements
+- preserving odd-indexed elements
+- handling positive and negative values
+- maintaining already-correct ordering when appropriate
+
+The LLM-assisted workflow improved the test suite by:
+- converting manual tests to JUnit
+- covering index-based sorting behavior
+- ensuring unchanged positions remain stable
