@@ -1,0 +1,114 @@
+==============================
+LLM INTERACTION LOG — TASK27
+==============================
+
+Task: Java/27
+Objective: Flip lowercase characters to uppercase and uppercase to lowercase in a string.
+
+--------------------------------
+Step 1: Initial Test Conversion
+--------------------------------
+
+Prompt:
+Convert the main-based test into a proper JUnit test for the flipCase method.
+
+LLM Response:
+Provided a JUnit 5 test class using assertEquals to validate string case transformations.
+
+Explanation:
+The output was used directly to replace manual testing with JUnit-based tests, enabling automated execution and integration with JaCoCo.
+
+--------------------------------
+Step 2: Identify Missing Coverage
+--------------------------------
+
+Prompt:
+Improve test cases to ensure full coverage, including edge cases.
+
+LLM Response:
+Suggested adding:
+- empty string case
+- mixed-case string
+- sentence with spaces and punctuation
+
+Explanation:
+The method iterates over each character and branches based on:
+- Character.isLowerCase
+- else (uppercase or non-letter)
+
+The initial tests covered general behavior but needed explicit validation of edge cases like empty input and non-alphabetic characters.
+
+--------------------------------
+Step 3: Refine Tests for Full Coverage
+--------------------------------
+
+Prompt:
+Ensure all logical branches (lowercase, uppercase, non-letter) are exercised.
+
+LLM Response:
+Finalized test suite including:
+- empty string (loop not executed)
+- mixed case string (both lowercase and uppercase paths)
+- sentence with spaces and punctuation (non-letter branch)
+
+Explanation:
+The final test suite ensures:
+- loop skip branch is covered
+- lowercase → uppercase conversion is tested
+- uppercase → lowercase conversion is tested
+- non-alphabetic characters remain unchanged
+
+--------------------------------
+Final Test Code Used
+--------------------------------
+
+package task27;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class SolutionTest {
+
+    private Solution solution;
+
+    @BeforeEach
+    void setUp() {
+        solution = new Solution();
+    }
+
+    @Test
+    void emptyStringFlipCaseReturnsEmpty() {
+        assertEquals("", solution.flipCase(""));
+    }
+
+    @Test
+    void mixedCaseStringFlipsCorrectly() {
+        assertEquals("hELLO!", solution.flipCase("Hello!"));
+    }
+
+    @Test
+    void longMixedCaseSentenceFlipsCorrectly() {
+        assertEquals(
+            "tHESE VIOLENT DELIGHTS HAVE VIOLENT ENDS",
+            solution.flipCase("These violent delights have violent ends"));
+    }
+}
+
+--------------------------------
+Coverage Result
+--------------------------------
+
+Branch Coverage: 100%
+Line Coverage: 100%
+
+--------------------------------
+Summary
+--------------------------------
+
+The test suite validates all character transformation paths:
+- lowercase to uppercase
+- uppercase to lowercase
+- non-letter characters unchanged
+
+The LLM-assisted refinement ensured full branch coverage and robust validation of string transformation behavior.
